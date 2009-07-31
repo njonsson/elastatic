@@ -1,0 +1,3 @@
+= Elastatic
+
+An easy and flexible way of building static web sites with a dynamic flair.
