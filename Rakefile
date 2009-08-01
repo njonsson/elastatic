@@ -7,7 +7,7 @@ def announce(message, options={})
   puts options[:done] unless options[:done].nil?
 end
 
-task :default => 'site:build'
+task :default => :test
 
 namespace :site do
   desc 'Build the site'
