@@ -29,7 +29,7 @@ desc 'Run automated tests'
 task :test do
   announce "Running tests ...\n", :done => nil do
     with_test_files do |f, first|
-      require f
+      require File.join(File.dirname(f), File.basename(f, '.rb'))
     end
   end
 end
