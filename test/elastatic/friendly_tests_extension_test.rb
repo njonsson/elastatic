@@ -19,6 +19,12 @@ class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
     self.class.test 'should display a pending notification'
   end
   
+  def do_define_disabled_test
+    self.class.xtest 'should display a pending notification via xtest' do
+      @block_was_executed = true
+    end
+  end
+  
   def test_should_define_test_as_an_instance_method_with_the_expected_name
     do_define_test
     assert_respond_to self, 'test_Foo! Bar? Baz@#$%^&*()-"'
@@ -41,6 +47,32 @@ class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
     pattern = /^\n\*\*\* PENDING at test\/elastatic\/friendly_tests_extension_test.rb:.+?: should display a pending notification$/
     $stdout.expects(:puts).with regexp_matches(pattern)
     send 'test_should display a pending notification'
+  end
+  
+  def test_should_not_execute_the_block_when_the_pending_test_method_is_called
+    assert_equal false, @block_was_executed
+    do_define_pending_test
+    send 'test_should display a pending notification'
+    assert_equal false, @block_was_executed
+  end
+  
+  def test_should_define_disabled_test_as_an_instance_method_with_the_expected_name
+    do_define_disabled_test
+    assert_respond_to self, 'test_should display a pending notification via xtest'
+  end
+  
+  def test_should_write_to_stdout_when_the_disabled_test_method_is_called
+    do_define_disabled_test
+    pattern = /^\n\*\*\* PENDING at test\/elastatic\/friendly_tests_extension_test.rb:.+?: should display a pending notification via xtest$/
+    $stdout.expects(:puts).with regexp_matches(pattern)
+    send 'test_should display a pending notification via xtest'
+  end
+  
+  def test_should_not_execute_the_block_when_the_disabled_test_method_is_called
+    assert_equal false, @block_was_executed
+    do_define_disabled_test
+    send 'test_should display a pending notification via xtest'
+    assert_equal false, @block_was_executed
   end
   
 end
