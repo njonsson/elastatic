@@ -7,26 +7,19 @@ module SectionTest
   
   module ClassMethods
     
-    class FindInRoot < Test::Unit::TestCase
+    class BuildPathFor < Test::Unit::TestCase
       
-      def setup
-        @mock_section = mock('Section')
-        Section.stubs(:new).returns @mock_section
-        @mock_section.stubs(:find_subsections).returns [:a_section_object]
+      test 'should not affect simple paths' do
+        assert_equal '_output/foo', Section.build_path_for('foo')
       end
       
-      test 'should instantiate a new root-level Section' do
-        Section.expects(:new).with().returns @mock_section
-        Section.find_in_root
+      test 'should not affect simple deep paths' do
+        assert_equal '_output/foo/bar/baz', Section.build_path_for('foo/bar/baz')
       end
       
-      test 'should send find_subsections on the root-level Section' do
-        @mock_section.expects(:find_subsections).with()
-        Section.find_in_root
-      end
-      
-      test 'should return the result of find_subsections on the root-level Section' do
-        assert_equal [:a_section_object], Section.find_in_root
+      test 'should remove trailing "-content" from all directory names in deep paths' do
+        assert_equal '_output/foo/bar/baz/bat',
+                     Section.build_path_for('foo-content/bar/baz-content/bat')
       end
       
     end
@@ -55,38 +48,99 @@ module SectionTest
       assert_nil @section.path
     end
     
-    class FindSubsections < ForRoot
+    class Build < ForRoot
+      
+      def setup
+        super
+        @mock_entry = mock('Entry')
+        @section.stubs(:entries).returns [@mock_entry]
+        @mock_entry.stubs(:build!).returns @mock_entry
+      end
+      
+      test 'should find entries' do
+        @section.expects(:entries).returns [@mock_entry]
+        @section.build!
+      end
+      
+      test 'should build each entry' do
+        @mock_entry.expects(:build!).returns @mock_entry
+        @section.build!
+      end
+      
+      test 'should return itself' do
+        assert_same @section, @section.build!
+      end
+      
+    end
+    
+    class Entries < ForRoot
+      
+      def setup
+        super
+        Dir.stubs(:glob).yields 'index.html.haml'
+        File.stubs(:file?).returns true
+        Entry.stubs(:new).returns :an_entry_object
+      end
+      
+      test 'should search for filesystem entries in root' do
+        Dir.expects(:glob).with('[^_]*').yields 'index.html.haml'
+        @section.entries
+      end
+      
+      test 'should verify that filesystem entries are files' do
+        File.expects(:file?).with('index.html.haml').returns true
+        @section.entries
+      end
+      
+      test 'should instantiate a new Entry for each entry file' do
+        Entry.expects(:new).with('index.html.haml').returns :an_entry_object
+        @section.entries
+      end
+      
+      test 'should not instantiate a new Entry for non-files' do
+        File.stubs(:file?).returns false
+        Entry.expects(:new).never
+        @section.entries
+      end
+      
+      test 'should return the instantiated Entry objects' do
+        assert_equal [:an_entry_object], @section.entries
+      end
+      
+    end
+    
+    class Subsections < ForRoot
       
       def setup
         super
         Dir.stubs(:glob).yields 'foo-content'
         File.stubs(:directory?).returns true
+        Section.stubs(:new).returns :a_section_object
       end
       
-      test 'should search for content directories' do
+      test 'should search for content directories in root' do
         Dir.expects(:glob).with('*-content').yields 'foo-content'
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should verify that filesystem entries are directories' do
         File.expects(:directory?).with('foo-content').returns true
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should instantiate a new Section for each content directory' do
         Section.expects(:new).with('foo-content').returns :a_section_object
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should not instantiate a new Section for non-directories' do
         File.stubs(:directory?).returns false
         Section.expects(:new).never
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should return the instantiated Section objects' do
-        Section.stubs(:new).returns :a_section_object
-        assert_equal [:a_section_object], @section.find_subsections
+        assert_equal [:a_section_object], @section.subsections
       end
       
     end
@@ -98,7 +152,7 @@ module SectionTest
         File.stubs(:exist?).returns false
       end
       
-      test 'should look for existence of section configuration file' do
+      test 'should look for existence of section configuration file in root' do
         File.expects(:exist?).with('_config.yml').returns false
         @section.title
       end
@@ -120,7 +174,7 @@ module SectionTest
           YAML.stubs(:load).returns false
         end
         
-        test 'should read section configuration file' do
+        test 'should read section configuration file in root' do
           File.expects(:read).with('_config.yml').returns ''
           @section.title
         end
@@ -168,7 +222,73 @@ module SectionTest
       assert_equal 'dir/goes/here', @section.path
     end
     
-    class FindSubsections < ForDeepDirectory
+    class Build < ForDeepDirectory
+      
+      def setup
+        super
+        @mock_entry = mock('Entry')
+        @section.stubs(:entries).returns [@mock_entry]
+        @mock_entry.stubs(:build!).returns @mock_entry
+      end
+      
+      test 'should find entries' do
+        @section.expects(:entries).returns [@mock_entry]
+        @section.build!
+      end
+      
+      test 'should build each entry' do
+        @mock_entry.expects(:build!).returns @mock_entry
+        @section.build!
+      end
+      
+      test 'should return itself' do
+        assert_same @section, @section.build!
+      end
+      
+    end
+    
+    class Entries < ForDeepDirectory
+      
+      def setup
+        super
+        Dir.stubs(:glob).yields 'dir/goes/here/index.html.haml'
+        File.stubs(:file?).returns true
+        Entry.stubs(:new).returns :an_entry_object
+      end
+      
+      test 'should combine path and entry name pattern' do
+        File.expects(:join).with('dir/goes/here', '[^_]*').returns 'dir/goes/here/[^_]*'
+        @section.entries
+      end
+      
+      test 'should search for filesystem entries in path' do
+        Dir.expects(:glob).with('dir/goes/here/[^_]*').yields 'index.html.haml'
+        @section.entries
+      end
+      
+      test 'should verify that filesystem entries are files' do
+        File.expects(:file?).with('dir/goes/here/index.html.haml').returns true
+        @section.entries
+      end
+      
+      test 'should instantiate a new Entry for each entry file' do
+        Entry.expects(:new).with('dir/goes/here/index.html.haml').returns :an_entry_object
+        @section.entries
+      end
+      
+      test 'should not instantiate a new Entry for non-files' do
+        File.stubs(:file?).returns false
+        Entry.expects(:new).never
+        @section.entries
+      end
+      
+      test 'should return the instantiated Entry objects' do
+        assert_equal [:an_entry_object], @section.entries
+      end
+      
+    end
+    
+    class Subsections < ForDeepDirectory
       
       def setup
         super
@@ -178,33 +298,33 @@ module SectionTest
       
       test 'should combine path and directory name pattern' do
         File.expects(:join).with('dir/goes/here', '*-content').returns 'dir/goes/here/*-content'
-        @section.find_subsections
+        @section.subsections
       end
       
-      test 'should search for content directories' do
+      test 'should search for content directories in path' do
         Dir.expects(:glob).with('dir/goes/here/*-content').yields 'foo-content'
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should verify that filesystem entries are directories' do
         File.expects(:directory?).with('dir/goes/here/foo-content').returns true
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should instantiate a new Section for each content directory' do
         Section.expects(:new).with('dir/goes/here/foo-content').returns :a_section_object
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should not instantiate a new Section for non-directories' do
         File.stubs(:directory?).returns false
         Section.expects(:new).never
-        @section.find_subsections
+        @section.subsections
       end
       
       test 'should return the instantiated Section objects' do
         Section.stubs(:new).returns :a_section_object
-        assert_equal [:a_section_object], @section.find_subsections
+        assert_equal [:a_section_object], @section.subsections
       end
       
     end
@@ -214,6 +334,7 @@ module SectionTest
       def setup
         super
         File.stubs(:exist?).returns false
+        Section.stubs(:build_path_for).returns 'dir/goes/here'
       end
       
       test 'should combine empty string path and section configuration filename' do
@@ -221,7 +342,7 @@ module SectionTest
         @section.title
       end
       
-      test 'should look for existence of section configuration file' do
+      test 'should look for existence of section configuration file in path' do
         File.expects(:exist?).with('dir/goes/here/_config.yml').returns false
         @section.title
       end
@@ -230,24 +351,27 @@ module SectionTest
         
         def setup
           super
-          @directory_name = 'here'
-          File.stubs(:basename).returns @directory_name
-          @directory_name.stubs(:gsub).returns @directory_name
-          @directory_name.stubs(:titleize).returns 'Here'
+          @build_path = 'dir/goes/here'
+          Section.stubs(:build_path_for).returns @build_path
+          @basename = 'here'
+          File.stubs(:basename).returns @basename
+          @basename.stubs(:titleize).returns 'Here'
         end
         
-        test 'should extract directory name from path' do
-          File.expects(:basename).with('dir/goes/here').returns @directory_name
+        test 'should obtain the build path for the path' do
+          Section.expects(:build_path_for).
+                  with('dir/goes/here').
+                  returns @build_path
           @section.title
         end
         
-        test 'should remove trailing "-content" from directory name' do
-          @directory_name.expects(:gsub).with(/-content$/, '').returns 'here'
+        test 'should obtain the basename of the build path' do
+          File.expects(:basename).with(@build_path).returns @basename
           @section.title
         end
         
-        test 'should titleize directory name' do
-          @directory_name.expects(:titleize).returns 'Here'
+        test 'should titleize the basename' do
+          @basename.expects(:titleize).returns 'Here'
           @section.title
         end
         
@@ -266,7 +390,7 @@ module SectionTest
           YAML.stubs(:load).returns false
         end
         
-        test 'should read section configuration file' do
+        test 'should read section configuration file in path' do
           File.expects(:read).with('dir/goes/here/_config.yml').returns ''
           @section.title
         end
@@ -275,19 +399,27 @@ module SectionTest
           
           def setup
             super
-            @directory_name = 'here'
-            File.stubs(:basename).returns @directory_name
-            @directory_name.stubs(:gsub).returns @directory_name
-            @directory_name.stubs(:titleize).returns 'Here'
+            @build_path = 'dir/goes/here'
+            Section.stubs(:build_path_for).returns @build_path
+            @basename = 'here'
+            File.stubs(:basename).returns @basename
+            @basename.stubs(:titleize).returns 'Here'
           end
           
-          test 'should remove trailing "-content" from directory name' do
-            @directory_name.expects(:gsub).with(/-content$/, '').returns 'here'
+          test 'should obtain the build path for the path' do
+            Section.expects(:build_path_for).
+                    with('dir/goes/here').
+                    returns @build_path
             @section.title
           end
           
-          test 'should titleize the directory name' do
-            @directory_name.expects(:titleize).returns 'Here'
+          test 'should obtain the basename of the build path' do
+            File.expects(:basename).with(@build_path).returns @basename
+            @section.title
+          end
+          
+          test 'should titleize the basename' do
+            @basename.expects(:titleize).returns 'Here'
             @section.title
           end
           

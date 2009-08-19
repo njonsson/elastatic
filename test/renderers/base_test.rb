@@ -1,0 +1,33 @@
+require 'test/unit'
+require 'lib/elastatic/friendly_tests_extension'
+require 'vendor/mocha'
+require 'lib/renderers/base'
+
+class Renderers::BaseTest < Test::Unit::TestCase
+  
+  def setup
+    @base_renderer = Renderers::Base
+  end
+  
+  test 'should be immutable' do
+    assert_raise NoMethodError do
+      @base_renderer.supported_file_extensions = %w(foo)
+    end
+    assert_raise TypeError do
+      @base_renderer.supported_file_extensions << 'foo'
+    end
+  end
+  
+  test 'should be its own canonical class' do
+    assert_same @base_renderer, @base_renderer.canonical_class
+  end
+  
+  test 'should have no supported file extensions' do
+    assert_equal [], @base_renderer.supported_file_extensions
+  end
+  
+  test 'should return the source when rendering' do
+    assert_equal 'foo', @base_renderer.render('foo')
+  end
+  
+end
