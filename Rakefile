@@ -7,20 +7,40 @@ def announce(message, options={})
   puts options[:done] unless options[:done].nil?
 end
 
+def in_project_directory
+  variable_name = 'PROJECT_DIRECTORY'
+  project_directory = ENV[variable_name]
+  unless project_directory
+    $stderr.puts "*** Error: You must specify the #{variable_name} variable"
+    exit 1
+  end
+  original_directory = Dir.pwd
+  begin
+    Dir.chdir project_directory
+    yield
+  ensure
+    Dir.chdir original_directory
+  end
+end
+
 task :default => :test
 
 namespace :site do
   desc 'Build the site'
   task :build => :clobber do
-    announce 'Building site ...' do
-      Site.new.build!
+    in_project_directory do
+      announce "Building site at #{Dir.pwd} ..." do
+        Site.new.build!
+      end
     end
   end
   
   desc "Delete the '#{Site::OUTPUT_DIRECTORY}' directory"
   task :clobber do
-    announce 'Clobbering output ...' do
-      Site.new.clobber!
+    in_project_directory do
+      announce 'Clobbering output ...' do
+        Site.new.clobber!
+      end
     end
   end
 end
