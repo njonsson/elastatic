@@ -5,6 +5,22 @@ require 'lib/site'
 
 module SiteTest
   
+  class RootSection < Test::Unit::TestCase
+    
+    def setup
+      @site = Site.new
+    end
+    
+    test 'should return a Section with root path' do
+      assert_nil @site.root_section.path
+    end
+    
+    test 'should maintain as an attribute' do
+      assert_same @site.root_section, @site.root_section
+    end
+    
+  end
+  
   class Clobber < Test::Unit::TestCase
     
     def setup
@@ -51,17 +67,11 @@ module SiteTest
   class Build < Test::Unit::TestCase
     
     def setup
-      @sections = [Section.new]
-      Section.stubs(:find_in_root).returns @sections
-      File.stubs(:read).returns 'Haml content goes here'
-      @mock_haml_engine = mock('Haml::Engine')
-      Haml::Engine.stubs(:new).returns @mock_haml_engine
-      @mock_haml_engine.stubs(:render).returns 'HTML goes here'
-      @mock_file = mock('IO')
-      File.stubs(:open).yields @mock_file
-      @mock_file.stubs :puts
-      
+      Kernel.stubs :system
+      @mock_section = mock('Section')
       @site = Site.new
+      @site.stubs(:root_section).returns @mock_section
+      @mock_section.stubs :build!
     end
     
     test 'should create the output directory' do
@@ -69,32 +79,13 @@ module SiteTest
       @site.build!
     end
     
-    test 'should read index source file' do
-      File.expects(:read).with('index.html.haml').returns 'Haml content goes here'
+    test 'should use the root section' do
+      @site.expects(:root_section).with().returns @mock_section
       @site.build!
     end
     
-    test 'should instantiate Haml engine' do
-      Haml::Engine.expects(:new).
-                   with('Haml content goes here', :attr_wrapper => '"',
-                                                  :filename => 'index.html.haml').
-                   returns @mock_haml_engine
-      @site.build!
-    end
-    
-    test 'should send render to Haml engine' do
-      @mock_haml_engine.expects(:render).
-                        with anything, has_entries(:sections => @sections)
-      @site.build!
-    end
-    
-    test 'should open index output file' do
-      File.expects(:open).with('_output/index.html', 'w').yields @mock_file
-      @site.build!
-    end
-    
-    test 'should write to index output file' do
-      @mock_file.expects(:puts).with 'HTML goes here'
+    test 'should build the root section' do
+      @mock_section.expects(:build!).with().returns @mock_section
       @site.build!
     end
     

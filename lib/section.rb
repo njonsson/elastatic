@@ -1,41 +1,59 @@
 require 'yaml'
-require 'lib/elastatic/titleize_extension'
+require 'lib/elastatic/inflections_extension'
+require 'lib/elastatic/to_proc_extension'
+require 'lib/entry'
 
 class Section
   
   CONFIG_FILENAME = '_config.yml'
   
-  class << self
-    
-    def find_in_root
-      Section.new.find_subsections
-    end
-    
+  def self.build_path_for(path)
+    File.join Site::OUTPUT_DIRECTORY,
+              path.gsub(/-content([\/\\]+)/, '\1').gsub(/-content$/, '')
   end
   
   attr_reader :path
   
   def initialize(path=nil)
-    @path = path
+    @path = path.freeze
   end
   
-  def find_subsections
-    sections = []
-    Dir.glob File.join(*[path, '*-content'].compact) do |d|
-      next unless File.directory?(d)
-      sections << Section.new(d)
+  def build!
+    entries.each &:build!
+    self
+  end
+  
+  def entries
+    return collect_from_filesystem(:pattern => '[^_]*', :file? => true) do |f|
+      Entry.new f
     end
-    sections
+  end
+  
+  def subsections
+    return collect_from_filesystem(:pattern => '*-content',
+                                   :directory? => true) do |d|
+      Section.new d
+    end
   end
   
   def title
     title_from_config_file = fetch_title_from_config_file
     return title_from_config_file if title_from_config_file
     return nil unless path
-    File.basename(path).gsub(/-content$/, '').titleize
+    File.basename(Section.build_path_for(path)).titleize
   end
   
 private
+  
+  def collect_from_filesystem(options={})
+    objects = []
+    Dir.glob File.join(*[path, options[:pattern]].compact) do |entry|
+      next if (options.include?(:file?)      && (File.file?(entry)      != options[:file?])) ||
+              (options.include?(:directory?) && (File.directory?(entry) != options[:directory?]))
+      objects << yield(entry)
+    end
+    objects
+  end
   
   def fetch_config_from_file
     config_file_full_path = File.join(*[path, CONFIG_FILENAME].compact)
