@@ -124,6 +124,7 @@ class EntryTest < Test::Unit::TestCase
       test 'should use the first renderer' do
         @mock_haml_renderer.expects(:render).
                             with('content goes here',
+                                 @entry,
                                  :filename => '_output/dir/goes/here/foo.html.haml').
                             returns 'rendered content goes here'
         @entry.build!

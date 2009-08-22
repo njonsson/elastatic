@@ -30,4 +30,8 @@ class Renderers::BaseTest < Test::Unit::TestCase
     assert_equal 'foo', @base_renderer.render('foo')
   end
   
+  test 'should not touch the scope option when rendering' do
+    @base_renderer.render 'foo', :scope => mock
+  end
+  
 end

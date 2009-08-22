@@ -27,7 +27,7 @@ class Renderers::HamlTest < Test::Unit::TestCase
   end
   
   test 'should render Haml to the expected HTML' do
-    expected = <<-end_html
+    expected_html = <<-end_expected_html
 <html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Foo</title>
@@ -37,8 +37,8 @@ class Renderers::HamlTest < Test::Unit::TestCase
     <p>Foo bar baz.</p>
   </body>
 </html>
-    end_html
-    actual = @haml.render <<-end_haml
+    end_expected_html
+    haml = <<-end_haml
 %html{html_attrs}
   %head
     %title Foo
@@ -47,7 +47,25 @@ class Renderers::HamlTest < Test::Unit::TestCase
     
     %p Foo bar baz.
     end_haml
-    assert_equal expected, actual
+    assert_equal expected_html, @haml.render(haml)
+  end
+  
+  test 'should render Haml using the scope option' do
+    expected_html = <<-end_expected_html
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+  <body>
+    <h1>this is a test</h1>
+  </body>
+</html>
+    end_expected_html
+    haml = <<-end_haml
+%html{html_attrs}
+  %body
+    %h1= test_message
+    end_haml
+    actual_html = @haml.render(haml,
+                               :scope => mock(:test_message => 'this is a test'))
+    assert_equal expected_html, actual_html
   end
   
 end
