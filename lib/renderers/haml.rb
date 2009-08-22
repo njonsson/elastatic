@@ -10,9 +10,9 @@ class Renderers::Haml
       self
     end
     
-    def render(haml_source, haml_options={})
-      haml_options = {:attr_wrapper => '"'}.merge(haml_options)
-      Haml::Engine.new(haml_source, haml_options).render
+    def render(haml_source, options={})
+      options = {:attr_wrapper => '"'}.merge(options)
+      Haml::Engine.new(haml_source, options).render options[:scope]
     end
     
     def supported_file_extensions
