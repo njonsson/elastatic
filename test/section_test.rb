@@ -99,7 +99,9 @@ module SectionTest
       end
       
       test 'should instantiate a new Entry for each entry file' do
-        Entry.expects(:new).with('index.html.haml').returns @mock_entry
+        Entry.expects(:new).
+              with(:path => 'index.html.haml', :section => @section).
+              returns @mock_entry
         @section.entries
       end
       
@@ -279,7 +281,10 @@ module SectionTest
       end
       
       test 'should instantiate a new Entry for each entry file' do
-        Entry.expects(:new).with('dir/goes/here/index.html.haml').returns @mock_entry
+        Entry.expects(:new).
+              with(:path => 'dir/goes/here/index.html.haml',
+                   :section => @section).
+              returns @mock_entry
         @section.entries
       end
       
