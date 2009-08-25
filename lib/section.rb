@@ -28,7 +28,7 @@ class Section
   
   def entries
     return collect_from_filesystem(:pattern => '[^_]*', :file? => true) do |f|
-      Entry.new f
+      Entry.new :path => f, :section => self
     end
   end
   
