@@ -3,13 +3,13 @@ module Elastatic; end
 module Elastatic::InflectionsExtension
   
   def camelize
-    self.gsub /(^(\w)|_+(\w))/ do |initial|
+    self.gsub /(^\w|_+\w)/ do |initial|
       initial.gsub('_', '').upcase
     end
   end
   
   def titleize
-    self.gsub /\b([a-z])/ do |initial|
+    self.gsub /\b[a-z]/ do |initial|
       initial.upcase
     end
   end
