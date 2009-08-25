@@ -2,6 +2,7 @@ require 'test/unit'
 require 'lib/elastatic/friendly_tests_extension'
 require 'vendor/mocha'
 require 'lib/section'
+require 'lib/entry'
 
 module SectionTest
   
@@ -83,7 +84,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'index.html.haml'
         File.stubs(:file?).returns true
-        Entry.stubs(:new).returns :an_entry_object
+        @mock_entry = mock('Entry')
+        Entry.stubs(:new).returns @mock_entry
       end
       
       test 'should search for filesystem entries in root' do
@@ -97,7 +99,7 @@ module SectionTest
       end
       
       test 'should instantiate a new Entry for each entry file' do
-        Entry.expects(:new).with('index.html.haml').returns :an_entry_object
+        Entry.expects(:new).with('index.html.haml').returns @mock_entry
         @section.entries
       end
       
@@ -108,7 +110,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
-        assert_equal [:an_entry_object], @section.entries
+        assert_equal [@mock_entry], @section.entries
       end
       
     end
@@ -119,7 +121,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'foo-content'
         File.stubs(:directory?).returns true
-        Section.stubs(:new).returns :a_section_object
+        @subsection = Section.new
+        Section.stubs(:new).returns @subsection
       end
       
       test 'should search for content directories in root' do
@@ -133,7 +136,7 @@ module SectionTest
       end
       
       test 'should instantiate a new Section for each content directory' do
-        Section.expects(:new).with('foo-content').returns :a_section_object
+        Section.expects(:new).with('foo-content').returns @subsection
         @section.subsections
       end
       
@@ -144,7 +147,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Section objects' do
-        assert_equal [:a_section_object], @section.subsections
+        assert_equal [@subsection], @section.subsections
       end
       
     end
@@ -261,12 +264,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'dir/goes/here/index.html.haml'
         File.stubs(:file?).returns true
-        Entry.stubs(:new).returns :an_entry_object
-      end
-      
-      test 'should combine path and entry name pattern' do
-        File.expects(:join).with('dir/goes/here', '[^_]*').returns 'dir/goes/here/[^_]*'
-        @section.entries
+        @mock_entry = mock('Entry')
+        Entry.stubs(:new).returns @mock_entry
       end
       
       test 'should search for filesystem entries in path' do
@@ -280,7 +279,7 @@ module SectionTest
       end
       
       test 'should instantiate a new Entry for each entry file' do
-        Entry.expects(:new).with('dir/goes/here/index.html.haml').returns :an_entry_object
+        Entry.expects(:new).with('dir/goes/here/index.html.haml').returns @mock_entry
         @section.entries
       end
       
@@ -291,7 +290,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
-        assert_equal [:an_entry_object], @section.entries
+        assert_equal [@mock_entry], @section.entries
       end
       
     end
@@ -317,7 +316,7 @@ module SectionTest
       end
       
       test 'should instantiate a new Section for each content directory' do
-        Section.expects(:new).with('dir/goes/here/foo-content').returns :a_section_object
+        Section.expects(:new).with('dir/goes/here/foo-content').returns @subsection
         @section.subsections
       end
       
@@ -328,8 +327,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Section objects' do
-        Section.stubs(:new).returns :a_section_object
-        assert_equal [:a_section_object], @section.subsections
+        assert_equal [@subsection], @section.subsections
       end
       
     end
