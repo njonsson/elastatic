@@ -23,6 +23,14 @@ def in_project_directory
   end
 end
 
+def with_test_files
+  first = true
+  Dir.glob 'test/**/*_test.rb' do |f|
+    yield f, first
+    first = false
+  end
+end
+
 task :default => :test
 
 namespace :site do
@@ -55,14 +63,6 @@ task :test do
 end
 
 namespace :test do
-  def with_test_files
-    first = true
-    Dir.glob 'test/**/*_test.rb' do |f|
-      yield f, first
-      first = false
-    end
-  end
-  
   desc 'Run each automated test file in its own Ruby process'
   task :individually do
     def accumulate_counts!(output_line, statistics)
