@@ -25,7 +25,6 @@ module SiteTest
     
     def setup
       File.stubs(:directory?).returns false
-      
       @site = Site.new
     end
     
@@ -68,8 +67,8 @@ module SiteTest
     
     def setup
       Kernel.stubs :system
-      @mock_section = mock('Section')
       @site = Site.new
+      @mock_section = mock('Section')
       @site.stubs(:root_section).returns @mock_section
       @mock_section.stubs :build!
     end
