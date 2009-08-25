@@ -7,23 +7,6 @@ module SectionTest
   
   module ClassMethods
     
-    class BuildPathFor < Test::Unit::TestCase
-      
-      test 'should not affect simple paths' do
-        assert_equal '_output/foo', Section.build_path_for('foo')
-      end
-      
-      test 'should not affect simple deep paths' do
-        assert_equal '_output/foo/bar/baz', Section.build_path_for('foo/bar/baz')
-      end
-      
-      test 'should remove trailing "-content" from all directory names in deep paths' do
-        assert_equal '_output/foo/bar/baz/bat',
-                     Section.build_path_for('foo-content/bar/baz-content/bat')
-      end
-      
-    end
-    
     class New < Test::Unit::TestCase
       
       test 'should set path attribute to nil when sent with no arguments' do
@@ -38,6 +21,23 @@ module SectionTest
     
   end
   
+  class BuildPath < Test::Unit::TestCase
+    
+    test 'should return the expected path for a shallow section path' do
+      assert_equal '_output/foo', Section.new('foo').build_path
+    end
+    
+    test 'should return the expected path for a deep section path' do
+      assert_equal '_output/foo/bar/baz', Section.new('foo/bar/baz').build_path
+    end
+    
+    test 'should return path with trailing "-content" removed from all directory names in a deep section path' do
+      assert_equal '_output/foo/bar/baz/bat',
+                   Section.new('foo-content/bar/baz-content/bat').build_path
+    end
+    
+  end
+  
   class ForRoot < Test::Unit::TestCase
     
     def setup
@@ -46,6 +46,10 @@ module SectionTest
     
     test 'should have nil path' do
       assert_nil @section.path
+    end
+    
+    test 'should have expected build_path' do
+      assert_equal '_output', @section.build_path
     end
     
     class Build < ForRoot
@@ -222,6 +226,10 @@ module SectionTest
       assert_equal 'dir/goes/here', @section.path
     end
     
+    test 'should have expected build_path' do
+      assert_equal '_output/dir/goes/here', @section.build_path
+    end
+    
     class Build < ForDeepDirectory
       
       def setup
@@ -294,11 +302,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'dir/goes/here/foo-content'
         File.stubs(:directory?).returns true
-      end
-      
-      test 'should combine path and directory name pattern' do
-        File.expects(:join).with('dir/goes/here', '*-content').returns 'dir/goes/here/*-content'
-        @section.subsections
+        @subsection = Section.new
+        Section.stubs(:new).returns @subsection
       end
       
       test 'should search for content directories in path' do
@@ -334,12 +339,6 @@ module SectionTest
       def setup
         super
         File.stubs(:exist?).returns false
-        Section.stubs(:build_path_for).returns 'dir/goes/here'
-      end
-      
-      test 'should combine empty string path and section configuration filename' do
-        File.expects(:join).with('dir/goes/here', '_config.yml').returns '_config.yml'
-        @section.title
       end
       
       test 'should look for existence of section configuration file in path' do
@@ -349,34 +348,14 @@ module SectionTest
       
       class WithoutSectionConfigurationFile < Title
         
-        def setup
-          super
-          @build_path = 'dir/goes/here'
-          Section.stubs(:build_path_for).returns @build_path
-          @basename = 'here'
-          File.stubs(:basename).returns @basename
-          @basename.stubs(:titleize).returns 'Here'
-        end
-        
-        test 'should obtain the build path for the path' do
-          Section.expects(:build_path_for).
-                  with('dir/goes/here').
-                  returns @build_path
+        test 'should construct the title from the build_path' do
+          @section.expects(:build_path).returns '_output/dir/goes/here'
           @section.title
         end
         
-        test 'should obtain the basename of the build path' do
-          File.expects(:basename).with(@build_path).returns @basename
-          @section.title
-        end
-        
-        test 'should titleize the basename' do
-          @basename.expects(:titleize).returns 'Here'
-          @section.title
-        end
-        
-        test 'should return titleized directory name' do
-          assert_equal 'Here', @section.title
+        test 'should return the humanized and titleized directory name of the build_path' do
+          @section.stubs(:build_path).returns '_output/dir/goes/here-there_everywhere.at-once'
+          assert_equal 'Here There Everywhere.At Once', @section.title
         end
         
       end
@@ -396,32 +375,6 @@ module SectionTest
         end
         
         class LackingTitleOption < WithSectionConfigurationFile
-          
-          def setup
-            super
-            @build_path = 'dir/goes/here'
-            Section.stubs(:build_path_for).returns @build_path
-            @basename = 'here'
-            File.stubs(:basename).returns @basename
-            @basename.stubs(:titleize).returns 'Here'
-          end
-          
-          test 'should obtain the build path for the path' do
-            Section.expects(:build_path_for).
-                    with('dir/goes/here').
-                    returns @build_path
-            @section.title
-          end
-          
-          test 'should obtain the basename of the build path' do
-            File.expects(:basename).with(@build_path).returns @basename
-            @section.title
-          end
-          
-          test 'should titleize the basename' do
-            @basename.expects(:titleize).returns 'Here'
-            @section.title
-          end
           
           test 'should return titleized directory name' do
             assert_equal 'Here', @section.title

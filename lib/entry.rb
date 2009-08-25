@@ -1,16 +1,17 @@
+require 'lib/elastatic/inflections_extension'
 require 'lib/renderers'
-require 'lib/site'
 
 class Entry
   
-  attr_reader :path
+  attr_reader :path, :section
   
-  def initialize(path)
-    @path = path.freeze
+  def initialize(attributes={})
+    @path    = attributes[:path].freeze
+    @section = attributes[:section]
   end
   
   def build!
-    transformation = transform(:path => build_path, :content => source)
+    transformation = transform
     Kernel.system %Q(mkdir -p "#{File.dirname transformation[:path]}")
     File.open transformation[:path], 'w' do |f|
       f.print transformation[:content]
@@ -19,23 +20,38 @@ class Entry
   end
   
   def build_path
-    File.join Section.build_path_for(File.dirname(path)), File.basename(path)
+    transform[:path]
+  end
+  
+  def index?
+    ! (File.basename(path) =~ /^index(\.|$)/).nil?
   end
   
   def source
     File.read path
   end
   
+  def title
+    return section.title if index?
+    File.basename(build_path).gsub(/\..*/, '').humanize.titleize
+  end
+  
 private
   
-  def transform(data)
+  def transform
+    transform_recursive :path => File.join(section.build_path,
+                                           File.basename(path)),
+                        :content => source
+  end
+  
+  def transform_recursive(data)
     extname = File.extname(data[:path])
     return data unless (renderer = Renderers.choose(extname.gsub(/^\./, '')))
-    transform :path => File.join(File.dirname(data[:path]),
-                                 File.basename(data[:path], extname)),
-              :content => renderer.render(data[:content],
-                                          self,
-                                          :filename => data[:path])
+    transform_recursive :path => File.join(File.dirname(data[:path]),
+                                           File.basename(data[:path], extname)),
+                        :content => renderer.render(data[:content],
+                                                    self,
+                                                    :filename => data[:path])
   end
   
 end
