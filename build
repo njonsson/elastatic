@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
-Dir.chdir File.dirname(__FILE__)
 project_directory = File.expand_path(ARGV.first || Dir.pwd)
+Dir.chdir File.dirname(__FILE__)
 IO.popen %Q(rake --silent site:build PROJECT_DIRECTORY="#{project_directory}") do |stdout|
   until stdout.eof? do
     line = stdout.gets.chomp
