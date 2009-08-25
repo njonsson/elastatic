@@ -2,7 +2,6 @@ require 'yaml'
 require 'lib/elastatic/inflections_extension'
 require 'lib/elastatic/to_proc_extension'
 require 'lib/entry'
-require 'lib/section'
 require 'lib/site'
 
 class Section
