@@ -32,4 +32,37 @@ module Elastatic::InflectionsExtensionTest
     
   end
   
+  class Humanize < Test::Unit::TestCase
+    
+    test 'should break words at underscores and hyphens' do
+      assert_equal 'the quick brown fox jumped over the lazy dog',
+                   'the_quick-brown-fox_jumped_over_the_lazy-dog'.humanize
+    end
+    
+    test 'should not disturb multiple underscores' do
+      assert_equal 'foo__bar', 'foo__bar'.humanize
+    end
+    
+    test 'should not disturb multiple hyphens' do
+      assert_equal 'foo--bar', 'foo--bar'.humanize
+    end
+    
+    test 'should not disturb a leading underscore' do
+      assert_equal '_foo', '_foo'.humanize
+    end
+    
+    test 'should not disturb a trailing underscore' do
+      assert_equal 'foo_', 'foo_'.humanize
+    end
+    
+    test 'should not disturb a leading hyphen' do
+      assert_equal '-foo', '-foo'.humanize
+    end
+    
+    test 'should not disturb a trailing hyphen' do
+      assert_equal 'foo-', 'foo-'.humanize
+    end
+    
+  end
+  
 end

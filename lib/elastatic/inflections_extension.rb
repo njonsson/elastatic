@@ -8,6 +8,12 @@ module Elastatic::InflectionsExtension
     end
   end
   
+  def humanize
+    self.gsub /[a-z0-9][_\-][a-z0-9]/i do |word_juncture|
+      word_juncture.gsub /[_\-]/, ' '
+    end
+  end
+  
   def titleize
     self.gsub /\b[a-z]/ do |initial|
       initial.upcase
