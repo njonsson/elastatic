@@ -2,15 +2,12 @@ require 'yaml'
 require 'lib/elastatic/inflections_extension'
 require 'lib/elastatic/to_proc_extension'
 require 'lib/entry'
+require 'lib/section'
+require 'lib/site'
 
 class Section
   
   CONFIG_FILENAME = '_config.yml'
-  
-  def self.build_path_for(path)
-    File.join Site::OUTPUT_DIRECTORY,
-              path.gsub(/-content([\/\\]+)/, '\1').gsub(/-content$/, '')
-  end
   
   attr_reader :path
   
@@ -21,6 +18,12 @@ class Section
   def build!
     entries.each &:build!
     self
+  end
+  
+  def build_path
+    return Site::OUTPUT_DIRECTORY unless path
+    File.join Site::OUTPUT_DIRECTORY,
+              path.gsub(/-content([\/\\]+)/, '\1').gsub(/-content$/, '')
   end
   
   def entries
@@ -40,7 +43,7 @@ class Section
     title_from_config_file = fetch_title_from_config_file
     return title_from_config_file if title_from_config_file
     return nil unless path
-    File.basename(Section.build_path_for(path)).titleize
+    File.basename(build_path).humanize.titleize
   end
   
 private
