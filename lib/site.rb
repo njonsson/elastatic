@@ -2,7 +2,7 @@ require 'lib/section'
 
 class Site
   
-  OUTPUT_DIRECTORY = '_output'
+  OUTPUT_DIRECTORY = '_output' unless const_defined?('OUTPUT_DIRECTORY')
   
   attr_reader :root_section
   

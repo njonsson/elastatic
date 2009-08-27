@@ -50,7 +50,7 @@ private
     transform_recursive :path => File.join(File.dirname(data[:path]),
                                            File.basename(data[:path], extname)),
                         :content => renderer.render(data[:content],
-                                                    self,
+                                                    :scope => self,
                                                     :filename => data[:path])
   end
   

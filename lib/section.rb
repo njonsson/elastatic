@@ -6,7 +6,7 @@ require 'lib/site'
 
 class Section
   
-  CONFIG_FILENAME = '_config.yml'
+  CONFIG_FILENAME = '_config.yml' unless const_defined?('CONFIG_FILENAME')
   
   attr_reader :path
   
