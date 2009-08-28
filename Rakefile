@@ -1,4 +1,5 @@
-require 'lib/site'
+require File.expand_path("#{File.dirname __FILE__}/lib/elastatic/require_relative_extension")
+require_relative { 'lib/site' }
 
 def announce(message, options={})
   options[:done] = ' done' unless options.include?(:done)
@@ -25,7 +26,7 @@ end
 
 def with_test_files
   first = true
-  Dir.glob 'test/**/*_test.rb' do |f|
+  Dir.glob File.expand_path("#{File.dirname __FILE__}/test/**/*_test.rb") do |f|
     yield f, first
     first = false
   end
