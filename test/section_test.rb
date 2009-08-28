@@ -40,6 +40,35 @@ module SectionTest
     
   end
   
+  class Index < Test::Unit::TestCase
+    
+    def setup
+      @section = Section.new
+      @mock_entries = [mock('Entry'), mock('Entry'), mock('Entry')]
+      @mock_entries[0].stubs(:index?).returns false
+      @mock_entries[1].stubs(:index?).returns true
+      @mock_entries[2].stubs(:index?).returns true
+      @section.stubs(:entries).returns @mock_entries
+    end
+    
+    test 'should get entries' do
+      @section.expects(:entries).returns @mock_entries
+      @section.index
+    end
+    
+    test 'should detect first index' do
+      @mock_entries[0].expects(:index?).returns false
+      @mock_entries[1].expects(:index?).returns true
+      @mock_entries[2].expects(:index?).never
+      @section.index
+    end
+    
+    test 'should return first detected index' do
+      assert_equal @mock_entries[1], @section.index
+    end
+    
+  end
+  
   class ForRoot < Test::Unit::TestCase
     
     def setup

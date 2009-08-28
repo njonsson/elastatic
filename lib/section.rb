@@ -32,6 +32,10 @@ class Section
     end
   end
   
+  def index
+    entries.detect &:index?
+  end
+  
   def subsections
     return collect_from_filesystem(:pattern => '*-content',
                                    :directory? => true) do |d|
