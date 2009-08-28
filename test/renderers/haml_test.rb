@@ -1,7 +1,7 @@
-require 'test/unit'
-require 'lib/elastatic/friendly_tests_extension'
-require 'vendor/mocha'
-require 'lib/renderers/haml'
+require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+require_relative { '../../vendor/mocha' }
+require_relative { '../../lib/elastatic/friendly_tests_extension' }
+require_relative { '../../lib/renderers/haml' }
 
 class Renderers::HamlTest < Test::Unit::TestCase
   

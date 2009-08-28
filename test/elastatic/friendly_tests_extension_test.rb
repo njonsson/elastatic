@@ -1,6 +1,7 @@
 require 'test/unit'
-require 'vendor/mocha'
-require 'lib/elastatic/friendly_tests_extension'
+require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+require_relative { '../../vendor/mocha' }
+require_relative { '../../lib/elastatic/friendly_tests_extension' }
 
 class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
   
@@ -44,7 +45,7 @@ class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
   
   def test_should_write_to_stdout_when_the_pending_test_method_is_called
     do_define_pending_test
-    pattern = /^\n\*\*\* PENDING at test\/elastatic\/friendly_tests_extension_test.rb:.+?: should display a pending notification$/
+    pattern = create_notification_pattern('should display a pending notification')
     $stdout.expects(:puts).with regexp_matches(pattern)
     send 'test_should display a pending notification'
   end
@@ -63,7 +64,7 @@ class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
   
   def test_should_write_to_stdout_when_the_disabled_test_method_is_called
     do_define_disabled_test
-    pattern = /^\n\*\*\* PENDING at test\/elastatic\/friendly_tests_extension_test.rb:.+?: should display a pending notification via xtest$/
+    pattern = create_notification_pattern('should display a pending notification via xtest')
     $stdout.expects(:puts).with regexp_matches(pattern)
     send 'test_should display a pending notification via xtest'
   end
@@ -73,6 +74,12 @@ class Elastatic::FriendlyTestNamesExtensionTest < Test::Unit::TestCase
     do_define_disabled_test
     send 'test_should display a pending notification via xtest'
     assert_equal false, @block_was_executed
+  end
+  
+private
+  
+  def create_notification_pattern(message)
+    /^\n\*\*\* PENDING at #{File.expand_path __FILE__}:.+?: #{message}$/
   end
   
 end

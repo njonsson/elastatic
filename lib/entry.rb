@@ -1,5 +1,6 @@
-require 'lib/elastatic/inflections_extension'
-require 'lib/renderers'
+require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
+require_relative { 'elastatic/inflections_extension' }
+require_relative { 'renderers' }
 
 class Entry
   

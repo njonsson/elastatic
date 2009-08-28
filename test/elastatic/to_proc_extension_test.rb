@@ -1,6 +1,7 @@
 require 'test/unit'
-require 'lib/elastatic/friendly_tests_extension'
-require 'lib/elastatic/to_proc_extension'
+require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+require_relative { '../../lib/elastatic/friendly_tests_extension' }
+require_relative { '../../lib/elastatic/to_proc_extension' }
 
 class Elastatic::ToProcExtensionTest < Test::Unit::TestCase
   
