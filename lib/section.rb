@@ -1,8 +1,9 @@
 require 'yaml'
-require 'lib/elastatic/inflections_extension'
-require 'lib/elastatic/to_proc_extension'
-require 'lib/entry'
-require 'lib/site'
+require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
+require_relative { 'elastatic/inflections_extension' }
+require_relative { 'elastatic/to_proc_extension' }
+require_relative { 'entry' }
+require_relative { 'site' }
 
 class Section
   
