@@ -1,3 +1,15 @@
+require 'rake'
+require 'rake/rdoctask'
+begin
+  require 'rcov/rcovtask'
+  RCOV_MISSING = false
+rescue LoadError
+  RCOV_MISSING = true
+  $stderr.puts '*' * 68
+  $stderr.puts 'Test coverage tasks are not available because RCov is not installed.'
+  $stderr.puts "To install RCov, type 'gem install rcov'."
+  $stderr.puts '*' * 68
+end
 require File.expand_path("#{File.dirname __FILE__}/lib/elastatic/require_relative_extension")
 require_relative { 'lib/site' }
 
@@ -24,9 +36,10 @@ def in_project_directory
   end
 end
 
+TESTS_FILESPEC = File.expand_path("#{File.dirname __FILE__}/test/**/*_test.rb")
 def with_test_files
   first = true
-  Dir.glob File.expand_path("#{File.dirname __FILE__}/test/**/*_test.rb") do |f|
+  Dir.glob TESTS_FILESPEC do |f|
     yield f, first
     first = false
   end
@@ -110,5 +123,27 @@ namespace :test do
            "#{statistics[:failures]} failures, "     +
            "#{statistics[:errors]} errors"
     end
+  end
+  
+  unless RCOV_MISSING
+    desc 'Create a code coverage report for the tests in test'
+    Rcov::RcovTask.new :coverage do |rcov|
+      rcov.output_dir = 'test_coverage'
+      rcov.test_files = TESTS_FILESPEC
+      rcov.verbose    = true
+    end
+  end
+end
+
+namespace :doc do
+  Rake::RDocTask.new :rdoc do |rdoc|
+    rdoc.rdoc_dir = 'doc'
+    rdoc.title    = 'Elastatic'
+    rdoc.rdoc_files.include 'README.rdoc'
+    rdoc.rdoc_files.include 'MIT-LICENSE'
+    rdoc.rdoc_files.include 'build'
+    rdoc.rdoc_files.include 'lib/**/*.rb'
+    rdoc.rdoc_files.exclude 'lib/elastatic/friendly_tests_extension.rb'
+    rdoc.options << '--line-numbers' << '--inline-source'
   end
 end
