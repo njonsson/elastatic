@@ -27,12 +27,8 @@ def in_project_directory
     $stderr.puts "*** Error: You must specify the #{variable_name} variable"
     exit 1
   end
-  original_directory = Dir.pwd
-  begin
-    Dir.chdir project_directory
+  Dir.chdir project_directory do
     yield
-  ensure
-    Dir.chdir original_directory
   end
 end
 
