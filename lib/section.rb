@@ -1,7 +1,7 @@
 require 'yaml'
 require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
 require_relative { 'elastatic/inflections_extension' }
-require_relative { 'elastatic/to_proc_extension' }
+require_relative { 'elastatic/to_proc_extension' } if RUBY_VERSION < '1.8.7'
 require_relative { 'entry' }
 require_relative { 'site' }
 
