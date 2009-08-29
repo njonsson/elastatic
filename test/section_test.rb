@@ -44,27 +44,27 @@ module SectionTest
     
     def setup
       @section = Section.new
-      @mock_entries = [mock('Entry'), mock('Entry'), mock('Entry')]
-      @mock_entries[0].stubs(:index?).returns false
-      @mock_entries[1].stubs(:index?).returns true
-      @mock_entries[2].stubs(:index?).returns true
-      @section.stubs(:entries).returns @mock_entries
+      @entries = [Entry.new, Entry.new, Entry.new]
+      @entries[0].stubs(:index?).returns false
+      @entries[1].stubs(:index?).returns true
+      @entries[2].stubs(:index?).returns true
+      @section.stubs(:entries).returns @entries
     end
     
     test 'should get entries' do
-      @section.expects(:entries).returns @mock_entries
+      @section.expects(:entries).returns @entries
       @section.index
     end
     
     test 'should detect first index' do
-      @mock_entries[0].expects(:index?).returns false
-      @mock_entries[1].expects(:index?).returns true
-      @mock_entries[2].expects(:index?).never
+      @entries[0].expects(:index?).returns false
+      @entries[1].expects(:index?).returns true
+      @entries[2].expects(:index?).never
       @section.index
     end
     
     test 'should return first detected index' do
-      assert_equal @mock_entries[1], @section.index
+      assert_equal @entries[1], @section.index
     end
     
   end
@@ -87,18 +87,18 @@ module SectionTest
       
       def setup
         super
-        @mock_entry = mock('Entry')
-        @section.stubs(:entries).returns [@mock_entry]
-        @mock_entry.stubs(:build!).returns @mock_entry
+        @entry = Entry.new
+        @section.stubs(:entries).returns [@entry]
+        @entry.stubs(:build!).returns @entry
       end
       
       test 'should find entries' do
-        @section.expects(:entries).returns [@mock_entry]
+        @section.expects(:entries).returns [@entry]
         @section.build!
       end
       
       test 'should build each entry' do
-        @mock_entry.expects(:build!).returns @mock_entry
+        @entry.expects(:build!).returns @entry
         @section.build!
       end
       
@@ -114,8 +114,6 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'index.html.haml'
         File.stubs(:file?).returns true
-        @mock_entry = mock('Entry')
-        Entry.stubs(:new).returns @mock_entry
       end
       
       test 'should search for filesystem entries in root' do
@@ -131,7 +129,7 @@ module SectionTest
       test 'should instantiate a new Entry for each entry file' do
         Entry.expects(:new).
               with(:path => 'index.html.haml', :section => @section).
-              returns @mock_entry
+              returns @entry
         @section.entries
       end
       
@@ -142,7 +140,9 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
-        assert_equal [@mock_entry], @section.entries
+        entry = Entry.new
+        Entry.stubs(:new).returns entry
+        assert_equal [entry], @section.entries
       end
       
     end
@@ -153,8 +153,6 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'foo-content'
         File.stubs(:directory?).returns true
-        @subsection = Section.new
-        Section.stubs(:new).returns @subsection
       end
       
       test 'should search for content directories in root' do
@@ -168,7 +166,8 @@ module SectionTest
       end
       
       test 'should instantiate a new Section for each content directory' do
-        Section.expects(:new).with('foo-content').returns @subsection
+        section = Section.new
+        Section.expects(:new).with('foo-content').returns section
         @section.subsections
       end
       
@@ -179,7 +178,9 @@ module SectionTest
       end
       
       test 'should return the instantiated Section objects' do
-        assert_equal [@subsection], @section.subsections
+        subsection = Section.new
+        Section.stubs(:new).returns subsection
+        assert_equal [subsection], @section.subsections
       end
       
     end
@@ -269,18 +270,18 @@ module SectionTest
       
       def setup
         super
-        @mock_entry = mock('Entry')
-        @section.stubs(:entries).returns [@mock_entry]
-        @mock_entry.stubs(:build!).returns @mock_entry
+        @entry = Entry.new
+        @section.stubs(:entries).returns [@entry]
+        @entry.stubs(:build!).returns @entry
       end
       
       test 'should find entries' do
-        @section.expects(:entries).returns [@mock_entry]
+        @section.expects(:entries).returns [@entry]
         @section.build!
       end
       
       test 'should build each entry' do
-        @mock_entry.expects(:build!).returns @mock_entry
+        @entry.expects(:build!).returns @entry
         @section.build!
       end
       
@@ -296,8 +297,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'dir/goes/here/index.html.haml'
         File.stubs(:file?).returns true
-        @mock_entry = mock('Entry')
-        Entry.stubs(:new).returns @mock_entry
+        @entry = Entry.new
+        Entry.stubs(:new).returns @entry
       end
       
       test 'should search for filesystem entries in path' do
@@ -314,7 +315,7 @@ module SectionTest
         Entry.expects(:new).
               with(:path => 'dir/goes/here/index.html.haml',
                    :section => @section).
-              returns @mock_entry
+              returns @entry
         @section.entries
       end
       
@@ -325,7 +326,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
-        assert_equal [@mock_entry], @section.entries
+        assert_equal [@entry], @section.entries
       end
       
     end
@@ -351,7 +352,9 @@ module SectionTest
       end
       
       test 'should instantiate a new Section for each content directory' do
-        Section.expects(:new).with('dir/goes/here/foo-content').returns @subsection
+        Section.expects(:new).
+                with('dir/goes/here/foo-content').
+                returns @subsection
         @section.subsections
       end
       
@@ -387,7 +390,8 @@ module SectionTest
         end
         
         test 'should return the humanized and titleized directory name of the build_path' do
-          @section.stubs(:build_path).returns '_output/dir/goes/here-there_everywhere.at-once'
+          @section.stubs(:build_path).
+                   returns '_output/dir/goes/here-there_everywhere.at-once'
           assert_equal 'Here There Everywhere.At Once', @section.title
         end
         

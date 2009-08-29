@@ -68,10 +68,10 @@ module SiteTest
     
     def setup
       Kernel.stubs :system
-      @site = Site.new
-      @mock_section = mock('Section')
-      @site.stubs(:root_section).returns @mock_section
-      @mock_section.stubs :build!
+      @site    = Site.new
+      @section = Section.new
+      @site.stubs(:root_section).returns @section
+      @section.stubs :build!
     end
     
     test 'should create the output directory' do
@@ -80,12 +80,12 @@ module SiteTest
     end
     
     test 'should use the root section' do
-      @site.expects(:root_section).with().returns @mock_section
+      @site.expects(:root_section).with().returns @section
       @site.build!
     end
     
     test 'should build the root section' do
-      @mock_section.expects(:build!).with().returns @mock_section
+      @section.expects(:build!).with().returns @section
       @site.build!
     end
     

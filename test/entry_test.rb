@@ -4,6 +4,7 @@ require_relative { '../vendor/mocha' }
 require_relative { '../lib/elastatic/friendly_tests_extension' }
 require_relative { '../lib/entry' }
 require_relative { '../lib/renderers' }
+require_relative { '../lib/section' }
 
 class EntryTest < Test::Unit::TestCase
   
@@ -17,8 +18,8 @@ class EntryTest < Test::Unit::TestCase
       end
       
       test 'should set section attribute' do
-        mock_section = mock('Section')
-        assert_equal mock_section, Entry.new(:section => mock_section).section
+        section = Section.new
+        assert_equal section, Entry.new(:section => section).section
       end
       
     end
@@ -26,8 +27,8 @@ class EntryTest < Test::Unit::TestCase
   end
   
   def setup
-    @mock_section = mock('Section')
-    @entry = Entry.new(:path => 'dir/goes/here/foo', :section => @mock_section)
+    @section = Section.new
+    @entry   = Entry.new(:path => 'dir/goes/here/foo', :section => @section)
   end
   
   test 'should be immutable' do
@@ -38,7 +39,7 @@ class EntryTest < Test::Unit::TestCase
       @entry.path.gsub! 'foo', 'bar'
     end
     assert_raise NoMethodError do
-      @entry.section = mock('Section')
+      @entry.section = Section.new
     end
   end
   
@@ -46,16 +47,18 @@ class EntryTest < Test::Unit::TestCase
     
     def setup
       super
-      File.stubs(:read).returns 'content goes here'
+      File.stubs(:read).returns '%content goes here'
     end
     
     test 'should read the file' do
-      File.expects(:read).with('dir/goes/here/foo').returns 'content goes here'
+      File.expects(:read).
+           with('dir/goes/here/foo').
+           returns '%content goes here'
       @entry.source
     end
     
     test 'should return the source' do
-      assert_equal 'content goes here', @entry.source
+      assert_equal '%content goes here', @entry.source
     end
     
   end
@@ -64,9 +67,8 @@ class EntryTest < Test::Unit::TestCase
     
     def setup
       super
-      @mock_section.stubs(:build_path).returns '_output/dir/goes/here'
-      @entry.stubs(:source).returns 'content goes here'
-      Renderers.stubs(:choose).returns nil
+      @section.stubs(:build_path).returns '_output/dir/goes/here'
+      @entry.stubs(:source).returns '%content goes here'
       Kernel.stubs :system
       @mock_file = mock('File')
       File.stubs(:open).yields @mock_file
@@ -74,17 +76,12 @@ class EntryTest < Test::Unit::TestCase
     end
     
     test 'should obtain the build path of the section when sent build!' do
-      @mock_section.expects(:build_path).returns '_output/dir/goes/here'
+      @section.expects(:build_path).with().returns '_output/dir/goes/here'
       @entry.build!
     end
     
-    test 'should obtain the build path of the section when sent build_path' do
-      @mock_section.expects(:build_path).returns '_output/dir/goes/here'
-      @entry.build_path
-    end
-    
     test 'should read the source when sent build!' do
-      @entry.expects(:source).with().returns 'content goes here'
+      @entry.expects(:source).with().returns '%content goes here'
       @entry.build!
     end
     
@@ -112,7 +109,7 @@ class EntryTest < Test::Unit::TestCase
       end
       
       test 'should write the source to the output subdirectory when sent build!' do
-        @mock_file.expects(:print).with 'content goes here'
+        @mock_file.expects(:print).with '%content goes here'
         @entry.build!
       end
       
@@ -127,32 +124,20 @@ class EntryTest < Test::Unit::TestCase
       def setup
         super
         @entry.stubs(:path).returns 'dir/goes/here/foo.html.haml'.freeze
-        @mock_haml_renderer = mock('Renderers::Haml')
-        Renderers.stubs(:choose).
-                  with('haml').
-                  returns @mock_haml_renderer
-        @mock_haml_renderer.stubs(:render).returns 'rendered content goes here'
-        Renderers.stubs(:choose).
-                  with('html').
-                  returns nil
       end
       
-      test 'should choose a renderer for the first file extension when sent build!' do
-        Renderers.expects(:choose).with('haml').returns @mock_haml_renderer
+      test 'should choose a renderer for each of the file extensions when sent build!' do
+        Renderers.expects(:choose).with('haml').returns Renderers::Haml
+        Renderers.expects(:choose).with('html').returns nil
         @entry.build!
       end
       
       test 'should use the first renderer when sent build!' do
-        @mock_haml_renderer.expects(:render).
-                            with('content goes here',
-                                 :scope => @entry,
-                                 :filename => '_output/dir/goes/here/foo.html.haml').
-                            returns 'rendered content goes here'
-        @entry.build!
-      end
-      
-      test 'should choose a renderer for the second file extension when sent build!' do
-        Renderers.expects(:choose).with('html').returns nil
+        Renderers::Haml.expects(:render).
+                        with('%content goes here',
+                             :scope => @entry,
+                             :filename => '_output/dir/goes/here/foo.html.haml').
+                        returns '<content>goes here</content>'
         @entry.build!
       end
       
@@ -164,7 +149,7 @@ class EntryTest < Test::Unit::TestCase
       end
       
       test 'should write the rendered content to the output subdirectory when sent build!' do
-        @mock_file.expects(:print).with 'rendered content goes here'
+        @mock_file.expects(:print).with "<content>goes here</content>\n"
         @entry.build!
       end
       
@@ -210,12 +195,13 @@ class EntryTest < Test::Unit::TestCase
       end
       
       test 'should check if the entry is an index' do
-        @entry.expects(:index?).returns false
+        @entry.expects(:index?).with().returns false
         @entry.title
       end
       
       test 'should construct the title from the build_path' do
         @entry.expects(:build_path).
+               with().
                returns '_output/dir/goes/here/foo-bar_baz.txt.html'
         @entry.title
       end
@@ -231,16 +217,16 @@ class EntryTest < Test::Unit::TestCase
       def setup
         super
         @entry.stubs(:index?).returns true
-        @mock_section.stubs(:title).returns 'Here'
+        @section.stubs(:title).returns 'Here'
       end
       
       test 'should check if the entry is an index' do
-        @entry.expects(:index?).returns true
+        @entry.expects(:index?).with().returns true
         @entry.title
       end
       
       test "should use the section's title" do
-        @mock_section.expects(:title).returns 'Here'
+        @section.expects(:title).with().returns 'Here'
         @entry.title
       end
       

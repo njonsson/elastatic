@@ -1,5 +1,4 @@
 require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
-require_relative { '../../vendor/mocha' }
 require_relative { '../../lib/elastatic/friendly_tests_extension' }
 require_relative { '../../lib/renderers/haml' }
 
@@ -63,8 +62,11 @@ class Renderers::HamlTest < Test::Unit::TestCase
   %body
     %h1= test_message
     end_haml
-    actual_html = @haml.render(haml,
-                               :scope => mock(:test_message => 'this is a test'))
+    scope = Object.new
+    def scope.test_message
+      'this is a test'
+    end
+    actual_html = @haml.render(haml, :scope => scope)
     assert_equal expected_html, actual_html
   end
   
