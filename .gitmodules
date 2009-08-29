@@ -1,6 +1,0 @@
-[submodule "vendor/haml"]
-	path = vendor/haml
-	url = git://github.com/nex3/haml.git
-[submodule "vendor/mocha"]
-	path = vendor/mocha
-	url = git://github.com/floehopper/mocha.git
