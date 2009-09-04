@@ -88,10 +88,11 @@
       <div class="name-list">
       <a href="#M000012">build!</a>&nbsp;&nbsp;
       <a href="#M000013">build_path</a>&nbsp;&nbsp;
-      <a href="#M000014">index?</a>&nbsp;&nbsp;
+      <a href="#M000014">href</a>&nbsp;&nbsp;
+      <a href="#M000015">index?</a>&nbsp;&nbsp;
       <a href="#M000011">new</a>&nbsp;&nbsp;
-      <a href="#M000015">source</a>&nbsp;&nbsp;
-      <a href="#M000016">title</a>&nbsp;&nbsp;
+      <a href="#M000016">source</a>&nbsp;&nbsp;
+      <a href="#M000017">title</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -145,11 +146,11 @@
             onclick="toggleCode('M000011-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000011-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 9</span>
- 9:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span>={})
-10:     <span class="ruby-ivar">@path</span>    = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:path</span>].<span class="ruby-identifier">freeze</span>
-11:     <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:section</span>]
-12:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 11</span>
+11:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span>={})
+12:     <span class="ruby-ivar">@path</span>    = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:path</span>].<span class="ruby-identifier">freeze</span>
+13:     <span class="ruby-ivar">@section</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:section</span>]
+14:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -171,15 +172,15 @@
             onclick="toggleCode('M000012-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000012-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 14</span>
-14:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build!</span>
-15:     <span class="ruby-identifier">transformation</span> = <span class="ruby-identifier">transform</span>
-16:     <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">system</span> <span class="ruby-node">%Q(mkdir -p &quot;#{File.dirname transformation[:path]}&quot;)</span>
-17:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">transformation</span>[<span class="ruby-identifier">:path</span>], <span class="ruby-value str">'w'</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
-18:       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">transformation</span>[<span class="ruby-identifier">:content</span>]
-19:     <span class="ruby-keyword kw">end</span>
-20:     <span class="ruby-keyword kw">self</span>
-21:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 16</span>
+16:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build!</span>
+17:     <span class="ruby-identifier">transformation</span> = <span class="ruby-identifier">transform</span>
+18:     <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">system</span> <span class="ruby-node">%Q(mkdir -p &quot;#{File.dirname transformation[:path]}&quot;)</span>
+19:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span> <span class="ruby-identifier">transformation</span>[<span class="ruby-identifier">:path</span>], <span class="ruby-value str">'w'</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+20:       <span class="ruby-identifier">f</span>.<span class="ruby-identifier">print</span> <span class="ruby-identifier">transformation</span>[<span class="ruby-identifier">:content</span>]
+21:     <span class="ruby-keyword kw">end</span>
+22:     <span class="ruby-keyword kw">self</span>
+23:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -199,10 +200,10 @@
             onclick="toggleCode('M000013-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000013-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 23</span>
-23:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_path</span>
-24:     <span class="ruby-identifier">transform</span>[<span class="ruby-identifier">:path</span>]
-25:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 25</span>
+25:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_path</span>
+26:     <span class="ruby-identifier">transform</span>[<span class="ruby-identifier">:path</span>]
+27:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -213,7 +214,7 @@
 
         <div class="method-heading">
           <a href="#M000014" class="method-signature">
-          <span class="method-name">index?</span><span class="method-args">()</span>
+          <span class="method-name">href</span><span class="method-args">()</span>
           </a>
         </div>
       
@@ -222,10 +223,11 @@
             onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000014-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 27</span>
-27:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index?</span>
-28:     <span class="ruby-operator">!</span> (<span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">path</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^index(\.|$)/</span>).<span class="ruby-identifier">nil?</span>
-29:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 29</span>
+29:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">href</span>
+30:     <span class="ruby-identifier">build_pathname</span> = <span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">build_path</span>)
+31:     <span class="ruby-identifier">build_pathname</span>.<span class="ruby-identifier">relative_path_from</span>(<span class="ruby-constant">Pathname</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">Site</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTPUT_DIRECTORY</span>)).<span class="ruby-identifier">to_s</span>
+32:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -236,7 +238,7 @@
 
         <div class="method-heading">
           <a href="#M000015" class="method-signature">
-          <span class="method-name">source</span><span class="method-args">()</span>
+          <span class="method-name">index?</span><span class="method-args">()</span>
           </a>
         </div>
       
@@ -245,10 +247,10 @@
             onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000015-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 31</span>
-31:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">source</span>
-32:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span> <span class="ruby-identifier">path</span>
-33:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 34</span>
+34:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index?</span>
+35:     <span class="ruby-operator">!</span> (<span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">path</span>) <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^index(\.|$)/</span>).<span class="ruby-identifier">nil?</span>
+36:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -259,7 +261,7 @@
 
         <div class="method-heading">
           <a href="#M000016" class="method-signature">
-          <span class="method-name">title</span><span class="method-args">()</span>
+          <span class="method-name">source</span><span class="method-args">()</span>
           </a>
         </div>
       
@@ -268,11 +270,34 @@
             onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000016-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/entry.rb, line 35</span>
-35:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
-36:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">title</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index?</span>
-37:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">build_path</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\..*/</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
-38:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 38</span>
+38:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">source</span>
+39:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">read</span> <span class="ruby-identifier">path</span>
+40:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
+
+        <div class="method-heading">
+          <a href="#M000017" class="method-signature">
+          <span class="method-name">title</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000017-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/entry.rb, line 42</span>
+42:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
+43:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">title</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">index?</span>
+44:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">build_path</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\..*/</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
+45:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
