@@ -1,6 +1,8 @@
+require 'pathname'
 require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
 require_relative { 'elastatic/inflections_extension' }
 require_relative { 'renderers' }
+require_relative { 'site' }
 
 class Entry
   
@@ -22,6 +24,11 @@ class Entry
   
   def build_path
     transform[:path]
+  end
+  
+  def href
+    build_pathname = Pathname.new(build_path)
+    build_pathname.relative_path_from(Pathname.new(Site::OUTPUT_DIRECTORY)).to_s
   end
   
   def index?

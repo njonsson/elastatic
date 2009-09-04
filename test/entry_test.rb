@@ -27,7 +27,7 @@ class EntryTest < Test::Unit::TestCase
   end
   
   def setup
-    @section = Section.new
+    @section = Section.new('dir/goes/here')
     @entry   = Entry.new(:path => 'dir/goes/here/foo', :section => @section)
   end
   
@@ -157,6 +157,24 @@ class EntryTest < Test::Unit::TestCase
         assert_equal '_output/dir/goes/here/foo.html', @entry.build_path
       end
       
+    end
+    
+  end
+  
+  class Href < EntryTest
+    
+    def setup
+      super
+      @entry.stubs(:build_path).returns '_output/dir/../goes/../here/foo.html'
+    end
+    
+    test "should use the build_path" do
+      @entry.expects(:build_path).returns '_output/dir/../goes/../here/foo.html'
+      @entry.href
+    end
+    
+    test 'should return the expected path' do
+      assert_equal 'here/foo.html', @entry.href
     end
     
   end
