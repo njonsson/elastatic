@@ -9,6 +9,9 @@ class Entry
   attr_reader :path, :section
   
   def initialize(attributes={})
+    unless attributes[:path] && attributes[:section]
+      raise ArgumentError, ':path and :section attributes are required'
+    end
     @path    = attributes[:path].freeze
     @section = attributes[:section]
   end

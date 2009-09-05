@@ -12,14 +12,23 @@ class EntryTest < Test::Unit::TestCase
     
     class New < Test::Unit::TestCase
       
-      test 'should set path attribute' do
-        assert_equal 'dir/goes/here/foo',
-                     Entry.new(:path => 'dir/goes/here/foo').path
+      test 'should set path and section attributes' do
+        section = Section.new
+        entry = Entry.new(:path => 'dir/goes/here/foo', :section => section)
+        assert_equal 'dir/goes/here/foo', entry.path
+        assert_equal section, entry.section
       end
       
-      test 'should set section attribute' do
-        section = Section.new
-        assert_equal section, Entry.new(:section => section).section
+      test 'should raise ArgumentError if sent without :path argument' do
+        assert_raise ArgumentError do
+          Entry.new :section => Section.new
+        end
+      end
+      
+      test 'should raise ArgumentError if sent without :section argument' do
+        assert_raise ArgumentError do
+          Entry.new :path => 'dir/goes/here/foo'
+        end
       end
       
     end

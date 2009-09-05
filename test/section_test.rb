@@ -45,7 +45,9 @@ module SectionTest
     
     def setup
       @section = Section.new
-      @entries = [Entry.new, Entry.new, Entry.new]
+      @entries = [Entry.new(:path => 'foo.html.haml', :section => @section),
+                  Entry.new(:path => 'bar.html.haml', :section => @section),
+                  Entry.new(:path => 'baz.html.haml', :section => @section)]
       @entries[0].stubs(:index?).returns false
       @entries[1].stubs(:index?).returns true
       @entries[2].stubs(:index?).returns true
@@ -153,7 +155,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
-        entry = Entry.new
+        entry = Entry.new(:path => 'index.html.haml', :section => @section)
         Entry.stubs(:new).returns entry
         assert_equal [entry], @section.entries
       end
@@ -283,7 +285,8 @@ module SectionTest
       
       def setup
         super
-        @entry = Entry.new
+        @entry = Entry.new(:path => 'dir/goes/here/foo.html.haml',
+                           :section => @section)
         @section.stubs(:entries).returns [@entry]
         @entry.stubs(:build!).returns @entry
       end
@@ -310,8 +313,8 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'dir/goes/here/index.html.haml'
         File.stubs(:file?).returns true
-        @entry = Entry.new
-        Entry.stubs(:new).returns @entry
+        @entry = Entry.new(:path => 'dir/goes/here/index.html.haml',
+                           :section => @section)
       end
       
       test 'should search for filesystem entries in path' do
@@ -339,6 +342,7 @@ module SectionTest
       end
       
       test 'should return the instantiated Entry objects' do
+        Entry.stubs(:new).returns @entry
         assert_equal [@entry], @section.entries
       end
       
@@ -350,8 +354,6 @@ module SectionTest
         super
         Dir.stubs(:glob).yields 'dir/goes/here/foo-content'
         File.stubs(:directory?).returns true
-        @subsection = Section.new
-        Section.stubs(:new).returns @subsection
       end
       
       test 'should search for content directories in path' do
@@ -378,7 +380,9 @@ module SectionTest
       end
       
       test 'should return the instantiated Section objects' do
-        assert_equal [@subsection], @section.subsections
+        subsection = Section.new
+        Section.stubs(:new).returns subsection
+        assert_equal [subsection], @section.subsections
       end
       
     end
