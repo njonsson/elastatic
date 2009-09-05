@@ -13,8 +13,8 @@ class Section
   
   attr_reader :path
   
-  def initialize(path=nil)
-    @path = path.freeze
+  def initialize(attributes={})
+    @path = attributes[:path].freeze
   end
   
   def build!
@@ -42,7 +42,7 @@ class Section
   def subsections
     return collect_from_filesystem(:pattern => '*-content',
                                    :directory? => true) do |d|
-      Section.new d
+      Section.new :path => d
     end
   end
   

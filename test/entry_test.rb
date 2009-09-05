@@ -27,7 +27,7 @@ class EntryTest < Test::Unit::TestCase
   end
   
   def setup
-    @section = Section.new('dir/goes/here')
+    @section = Section.new(:path => 'dir/goes/here')
     @entry   = Entry.new(:path => 'dir/goes/here/foo', :section => @section)
   end
   

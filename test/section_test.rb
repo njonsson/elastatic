@@ -15,8 +15,8 @@ module SectionTest
         assert_nil Section.new.path
       end
       
-      test 'should set path attribute to argument' do
-        assert_equal 'foo', Section.new('foo').path
+      test 'should set path attribute to :path argument' do
+        assert_equal 'foo', Section.new(:path => 'foo').path
       end
       
     end
@@ -26,16 +26,17 @@ module SectionTest
   class BuildPath < Test::Unit::TestCase
     
     test 'should return the expected path for a shallow section path' do
-      assert_equal '_output/foo', Section.new('foo').build_path
+      assert_equal '_output/foo', Section.new(:path => 'foo').build_path
     end
     
     test 'should return the expected path for a deep section path' do
-      assert_equal '_output/foo/bar/baz', Section.new('foo/bar/baz').build_path
+      assert_equal '_output/foo/bar/baz',
+                   Section.new(:path => 'foo/bar/baz').build_path
     end
     
     test 'should return path with trailing "-content" removed from all directory names in a deep section path' do
       assert_equal '_output/foo/bar/baz/bat',
-                   Section.new('foo-content/bar/baz-content/bat').build_path
+                   Section.new(:path => 'foo-content/bar/baz-content/bat').build_path
     end
     
   end
@@ -87,7 +88,7 @@ module SectionTest
       
       def setup
         super
-        @subsection = Section.new('foo')
+        @subsection = Section.new(:path => 'foo')
         @section.stubs(:subsections).returns [@subsection]
         @entry = Entry.new(:path => 'foo/bar.html.haml', :section => @section)
         @entry.stubs(:build!).returns @entry
@@ -179,7 +180,7 @@ module SectionTest
       
       test 'should instantiate a new Section for each content directory' do
         section = Section.new
-        Section.expects(:new).with('foo-content').returns section
+        Section.expects(:new).with(:path => 'foo-content').returns section
         @section.subsections
       end
       
@@ -267,7 +268,7 @@ module SectionTest
   class ForDeepDirectory < Test::Unit::TestCase
     
     def setup
-      @section = Section.new('dir/goes/here')
+      @section = Section.new(:path => 'dir/goes/here')
     end
     
     test 'should have expected path' do
@@ -365,7 +366,7 @@ module SectionTest
       
       test 'should instantiate a new Section for each content directory' do
         Section.expects(:new).
-                with('dir/goes/here/foo-content').
+                with(:path => 'dir/goes/here/foo-content').
                 returns @subsection
         @section.subsections
       end
