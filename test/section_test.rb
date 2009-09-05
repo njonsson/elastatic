@@ -87,9 +87,21 @@ module SectionTest
       
       def setup
         super
-        @entry = Entry.new
-        @section.stubs(:entries).returns [@entry]
+        @subsection = Section.new('foo')
+        @section.stubs(:subsections).returns [@subsection]
+        @entry = Entry.new(:path => 'foo/bar.html.haml', :section => @section)
         @entry.stubs(:build!).returns @entry
+        @section.stubs(:entries).returns [@entry]
+      end
+      
+      test 'should find subsections' do
+        @section.expects(:subsections).returns [@subsection]
+        @section.build!
+      end
+      
+      test 'should build each subsection' do
+        @subsection.expects(:build!).returns @subsection
+        @section.build!
       end
       
       test 'should find entries' do
