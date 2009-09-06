@@ -34,11 +34,6 @@ module SectionTest
                    Section.new(:path => 'foo/bar/baz').build_path
     end
     
-    test 'should return path with trailing "-content" removed from all directory names in a deep section path' do
-      assert_equal '_output/foo/bar/baz/bat',
-                   Section.new(:path => 'foo-content/bar/baz-content/bat').build_path
-    end
-    
   end
   
   class Index < Test::Unit::TestCase
@@ -166,23 +161,23 @@ module SectionTest
       
       def setup
         super
-        Dir.stubs(:glob).yields 'foo-content'
+        Dir.stubs(:glob).yields 'foo'
         File.stubs(:directory?).returns true
       end
       
       test 'should search for content directories in root' do
-        Dir.expects(:glob).with('*-content').yields 'foo-content'
+        Dir.expects(:glob).with('[^_]*').yields 'foo'
         @section.subsections
       end
       
       test 'should verify that filesystem entries are directories' do
-        File.expects(:directory?).with('foo-content').returns true
+        File.expects(:directory?).with('foo').returns true
         @section.subsections
       end
       
       test 'should instantiate a new Section for each content directory' do
         section = Section.new
-        Section.expects(:new).with(:path => 'foo-content').returns section
+        Section.expects(:new).with(:path => 'foo').returns section
         @section.subsections
       end
       
@@ -352,23 +347,25 @@ module SectionTest
       
       def setup
         super
-        Dir.stubs(:glob).yields 'dir/goes/here/foo-content'
+        Dir.stubs(:glob).yields 'dir/goes/here/foo'
         File.stubs(:directory?).returns true
       end
       
       test 'should search for content directories in path' do
-        Dir.expects(:glob).with('dir/goes/here/*-content').yields 'foo-content'
+        Dir.expects(:glob).
+            with('dir/goes/here/[^_]*').
+            yields 'dir/goes/here/foo'
         @section.subsections
       end
       
       test 'should verify that filesystem entries are directories' do
-        File.expects(:directory?).with('dir/goes/here/foo-content').returns true
+        File.expects(:directory?).with('dir/goes/here/foo').returns true
         @section.subsections
       end
       
       test 'should instantiate a new Section for each content directory' do
         Section.expects(:new).
-                with(:path => 'dir/goes/here/foo-content').
+                with(:path => 'dir/goes/here/foo').
                 returns @subsection
         @section.subsections
       end
