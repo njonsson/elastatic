@@ -304,9 +304,8 @@
 46:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
 47:     <span class="ruby-identifier">title_from_config_file</span> = <span class="ruby-identifier">fetch_title_from_config_file</span>
 48:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">title_from_config_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">title_from_config_file</span>
-49:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">path</span>
-50:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">build_path</span>).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
-51:   <span class="ruby-keyword kw">end</span>
+49:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span> <span class="ruby-operator">||</span> <span class="ruby-value str">'.'</span>)).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
+50:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
