@@ -18,8 +18,8 @@ class Section
   end
   
   def build!
-    subsections.each &:build!
     entries.each &:build!
+    subsections.each &:build!
     self
   end
   
