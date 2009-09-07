@@ -24,7 +24,9 @@ class Section
   end
   
   def build_path
-    [Site::OUTPUT_DIRECTORY, path].compact.join '/'
+    return Site::OUTPUT_DIRECTORY unless path
+    File.join Site::OUTPUT_DIRECTORY,
+              path.gsub(/-content([\/\\]+)/, '\1').gsub(/-content$/, '')
   end
   
   def empty?
@@ -33,7 +35,7 @@ class Section
   end
   
   def entries
-    return collect_from_filesystem(:file? => true) do |f|
+    return collect_from_filesystem(:pattern => '[^_]*', :file? => true) do |f|
       Entry.new :path => f, :section => self
     end
   end
@@ -43,7 +45,8 @@ class Section
   end
   
   def subsections
-    return collect_from_filesystem(:directory? => true) do |d|
+    return collect_from_filesystem(:pattern => '*-content',
+                                   :directory? => true) do |d|
       Section.new :path => d
     end
   end
@@ -51,14 +54,14 @@ class Section
   def title
     title_from_config_file = fetch_title_from_config_file
     return title_from_config_file if title_from_config_file
-    File.basename(File.expand_path(path || '.')).humanize.titleize
+    File.basename(File.expand_path(path ? build_path : '.')).humanize.titleize
   end
   
 private
   
   def collect_from_filesystem(options={})
     objects = []
-    Dir.glob File.join(*[path, '[^_]*'].compact) do |entry|
+    Dir.glob File.join(*[path, options[:pattern]].compact) do |entry|
       next if (options.include?(:file?)      && (File.file?(entry)      != options[:file?])) ||
               (options.include?(:directory?) && (File.directory?(entry) != options[:directory?]))
       objects << yield(entry)
