@@ -209,8 +209,14 @@ module SectionTest
       
       class WithoutSectionConfigurationFile < Title
         
-        test 'should return nil' do
-          assert_nil @section.title
+        test 'should construct the title from the expanded path of the current directory' do
+          File.expects(:expand_path).with('.').returns '/Users/bob'
+          @section.title
+        end
+        
+        test 'should return the humanized and titleized name of the current directory' do
+          File.stubs(:expand_path).with('.').returns '/Users/bob'
+          assert_equal 'Bob', @section.title
         end
         
       end
@@ -231,8 +237,14 @@ module SectionTest
         
         class LackingTitleOption < WithSectionConfigurationFile
           
-          test 'should return nil' do
-            assert_nil @section.title
+          test 'should expand the path of the current directory' do
+            File.expects(:expand_path).with('.').returns '/Users/bob'
+            @section.title
+          end
+          
+          test 'should return the humanized and titleized name of the current directory' do
+            File.stubs(:expand_path).with('.').returns '/Users/bob'
+            assert_equal 'Bob', @section.title
           end
           
         end
@@ -398,15 +410,18 @@ module SectionTest
       
       class WithoutSectionConfigurationFile < Title
         
-        test 'should construct the title from the build_path' do
-          @section.expects(:build_path).returns '_output/dir/goes/here'
+        test 'should construct the title from the expanded path' do
+          File.expects(:expand_path).
+               with('dir/goes/here').
+               returns '/Users/bob/dir/goes/here'
           @section.title
         end
         
-        test 'should return the humanized and titleized directory name of the build_path' do
-          @section.stubs(:build_path).
-                   returns '_output/dir/goes/here-there_everywhere.at-once'
-          assert_equal 'Here There Everywhere.At Once', @section.title
+        test 'should return the humanized and titleized name of the path' do
+          File.stubs(:expand_path).
+               with('dir/goes/here').
+               returns '/Users/bob/dir/goes/here'
+          assert_equal 'Here', @section.title
         end
         
       end
@@ -427,7 +442,17 @@ module SectionTest
         
         class LackingTitleOption < WithSectionConfigurationFile
           
-          test 'should return titleized directory name' do
+          test 'should expand the path' do
+            File.expects(:expand_path).
+                 with('dir/goes/here').
+                 returns '/Users/bob/dir/goes/here'
+            @section.title
+          end
+          
+          test 'should return the humanized and titleized name of the path' do
+            File.stubs(:expand_path).
+                 with('dir/goes/here').
+                 returns '/Users/bob/dir/goes/here'
             assert_equal 'Here', @section.title
           end
           
