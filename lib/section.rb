@@ -27,6 +27,11 @@ class Section
     [Site::OUTPUT_DIRECTORY, path].compact.join '/'
   end
   
+  def empty?
+    return false unless entries.empty?
+    subsections.all? &:empty?
+  end
+  
   def entries
     return collect_from_filesystem(:file? => true) do |f|
       Entry.new :path => f, :section => self

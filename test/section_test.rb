@@ -54,6 +54,11 @@ module SectionTest
       @section.index
     end
     
+    test 'should return nil if no entries' do
+      @section.stubs(:entries).returns []
+      assert_nil @section.index
+    end
+    
     test 'should detect first index' do
       @entries[0].expects(:index?).returns false
       @entries[1].expects(:index?).returns true
@@ -63,6 +68,104 @@ module SectionTest
     
     test 'should return first detected index' do
       assert_equal @entries[1], @section.index
+    end
+    
+    test 'should return nil if no entry is an index' do
+      @entries.each do |e|
+        e.stubs(:index?).returns false
+      end
+      assert_nil @section.index
+    end
+    
+  end
+  
+  class Empty < Test::Unit::TestCase
+    
+    def setup
+      @section = Section.new
+      @section.stubs(:entries).returns []
+      @section.stubs(:subsections).returns []
+    end
+    
+    test 'should get entries' do
+      @section.expects(:entries).returns []
+      @section.empty?
+    end
+    
+    class ForASectionHavingEntries < Empty
+      
+      def setup
+        super
+        @entries = [Entry.new(:path => 'foo.html.haml', :section => @section),
+                    Entry.new(:path => 'bar.html.haml', :section => @section),
+                    Entry.new(:path => 'baz.html.haml', :section => @section)]
+        @section.stubs(:entries).returns @entries
+      end
+      
+      test 'should not get subsections' do
+        @section.expects(:subsections).never
+        @section.empty?
+      end
+      
+      test 'should return false' do
+        assert_equal false, @section.empty?
+      end
+      
+    end
+    
+    class ForASectionHavingNoEntries < Empty
+      
+      def setup
+        super
+        @section.stubs(:entries).returns []
+        @section.stubs(:subsections).returns []
+      end
+      
+      test 'should get subsections' do
+        @section.expects(:subsections).returns []
+        @section.empty?
+      end
+      
+      class AndNoSubsections < ForASectionHavingNoEntries
+        
+        test 'should return true' do
+          assert_equal true, @section.empty?
+        end
+        
+      end
+      
+      class AndHavingSubsections < ForASectionHavingNoEntries
+        
+        def setup
+          super
+          @subsections = [Section.new(:path => 'dir/goes/here/foo'),
+                          Section.new(:path => 'dir/goes/here/bar'),
+                          Section.new(:path => 'dir/goes/here/baz')]
+          @section.stubs(:subsections).returns @subsections
+        end
+        
+        test 'should detect the first non-empty subsection' do
+          @subsections[0].expects(:empty?).returns true
+          @subsections[1].expects(:empty?).returns false
+          @subsections[2].expects(:empty?).never
+          @section.empty?
+        end
+        
+        test 'should return false if at least one subsection is not empty' do
+          @subsections[0].stubs(:empty?).returns true
+          @subsections[1].stubs(:empty?).returns false
+          assert_equal false, @section.empty?
+        end
+        
+        test 'should return true if all subsections are empty' do
+          @subsections.each do |s|
+            s.stubs(:empty?).returns true
+          end
+          assert_equal true, @section.empty?
+        end
+        
+      end
+      
     end
     
   end
