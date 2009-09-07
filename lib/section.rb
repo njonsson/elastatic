@@ -46,8 +46,7 @@ class Section
   def title
     title_from_config_file = fetch_title_from_config_file
     return title_from_config_file if title_from_config_file
-    return nil unless path
-    File.basename(build_path).humanize.titleize
+    File.basename(File.expand_path(path || '.')).humanize.titleize
   end
   
 private
