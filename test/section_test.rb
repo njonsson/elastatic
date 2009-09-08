@@ -274,7 +274,7 @@ module SectionTest
       end
       
       test 'should search for content directories in root' do
-        Dir.expects(:glob).with('*-content').yields 'foo-content'
+        Dir.expects(:glob).with('[^_]*-content').yields 'foo-content'
         @section.subsections
       end
       
@@ -472,7 +472,9 @@ module SectionTest
       end
       
       test 'should search for content directories in path' do
-        Dir.expects(:glob).with('dir/goes/here/*-content').yields 'foo-content'
+        Dir.expects(:glob).
+            with('dir/goes/here/[^_]*-content').
+            yields 'foo-content'
         @section.subsections
       end
       
