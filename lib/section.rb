@@ -45,7 +45,7 @@ class Section
   end
   
   def subsections
-    return collect_from_filesystem(:pattern => '*-content',
+    return collect_from_filesystem(:pattern => '[^_]*-content',
                                    :directory? => true) do |d|
       Section.new :path => d
     end
