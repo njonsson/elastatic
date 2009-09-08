@@ -304,7 +304,7 @@
 <pre>
     <span class="ruby-comment cmt"># File lib/section.rb, line 47</span>
 47:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subsections</span>
-48:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">collect_from_filesystem</span>(<span class="ruby-identifier">:pattern</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'*-content'</span>,
+48:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">collect_from_filesystem</span>(<span class="ruby-identifier">:pattern</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'[^_]*-content'</span>,
 49:                                    <span class="ruby-identifier">:directory?</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">true</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
 50:       <span class="ruby-constant">Section</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">d</span>
 51:     <span class="ruby-keyword kw">end</span>
