@@ -20,6 +20,7 @@ class Section
   def build!
     entries.each &:build!
     subsections.each &:build!
+    publish_nonsection_subdirectories!
     self
   end
   
@@ -35,7 +36,7 @@ class Section
   end
   
   def entries
-    return collect_from_filesystem(:pattern => '[^_]*', :file? => true) do |f|
+    collect_from_filesystem :entries do |f|
       Entry.new :path => f, :section => self
     end
   end
@@ -45,10 +46,13 @@ class Section
   end
   
   def subsections
-    return collect_from_filesystem(:pattern => '[^_]*-content',
-                                   :directory? => true) do |d|
+    collect_from_filesystem :sections do |d|
       Section.new :path => d
     end
+  end
+  
+  def nonsection_subdirectories
+    collect_from_filesystem :other
   end
   
   def title
@@ -59,12 +63,30 @@ class Section
   
 private
   
-  def collect_from_filesystem(options={})
+  def collect_from_filesystem(type)
     objects = []
-    Dir.glob File.join(*[path, options[:pattern]].compact) do |entry|
-      next if (options.include?(:file?)      && (File.file?(entry)      != options[:file?])) ||
-              (options.include?(:directory?) && (File.directory?(entry) != options[:directory?]))
-      objects << yield(entry)
+    collector = Proc.new do |entry|
+      if block_given?
+        objects << yield(entry)
+      else
+        objects << entry
+      end
+    end
+    Dir.glob File.join(*[path, '[^_]*'].compact) do |entry|
+      case type
+        when :entries
+          if File.file?(entry)
+            collector.call entry
+          end
+        when :sections
+          if File.directory?(entry) && (entry =~ /-content$/)
+            collector.call entry
+          end
+        else
+          if File.directory?(entry) && (entry =~ /-content$/).nil?
+            collector.call entry
+          end
+      end
     end
     objects
   end
@@ -79,6 +101,13 @@ private
     options = fetch_config_from_file
     return nil unless options && options.kind_of?(Hash)
     options['title']
+  end
+  
+  def publish_nonsection_subdirectories!
+    nonsection_subdirectories.each do |d|
+      Kernel.system %Q(mkdir -p "#{build_path}")
+      Kernel.system %Q(cp -R "#{d}" "#{build_path}/")
+    end
   end
   
 end
