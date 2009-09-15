@@ -198,6 +198,7 @@ module SectionTest
         @entry = Entry.new(:path => 'foo/bar.html.haml', :section => @section)
         @entry.stubs(:build!).returns @entry
         @section.stubs(:entries).returns [@entry]
+        Kernel.stubs :system
       end
       
       test 'should find subsections' do
@@ -274,7 +275,7 @@ module SectionTest
       end
       
       test 'should search for content directories in root' do
-        Dir.expects(:glob).with('[^_]*-content').yields 'foo-content'
+        Dir.expects(:glob).with('[^_]*').yields 'foo-content'
         @section.subsections
       end
       
@@ -299,6 +300,36 @@ module SectionTest
         subsection = Section.new
         Section.stubs(:new).returns subsection
         assert_equal [subsection], @section.subsections
+      end
+      
+    end
+    
+    class NonsectionSubdirectories < ForRoot
+      
+      def setup
+        super
+        @filesystem_entries = %w(foo-content bar baz.html.haml)
+        Dir.stubs(:glob).multiple_yields *@filesystem_entries
+        File.stubs(:directory?).with(@filesystem_entries[0]).returns true
+        File.stubs(:directory?).with(@filesystem_entries[1]).returns true
+        File.stubs(:directory?).with(@filesystem_entries[2]).returns false
+      end
+      
+      test 'should search for subdirectories in root' do
+        Dir.expects(:glob).multiple_yields *@filesystem_entries
+        @section.nonsection_subdirectories
+      end
+      
+      test 'should verify that filesystem entries are directories' do
+        File.expects(:directory?).with(@filesystem_entries[0]).returns true
+        File.expects(:directory?).with(@filesystem_entries[1]).returns true
+        File.expects(:directory?).with(@filesystem_entries[2]).returns false
+        @section.nonsection_subdirectories
+      end
+      
+      test 'should return only subdirectories that are not sections' do
+        assert_equal [@filesystem_entries[1]],
+                     @section.nonsection_subdirectories
       end
       
     end
@@ -400,12 +431,26 @@ module SectionTest
       
       def setup
         super
-        @subsection = Section.new(:path => 'foo')
+        @subsection = Section.new(:path => 'dir/goes/here/foo')
         @section.stubs(:subsections).returns [@subsection]
-        @entry = Entry.new(:path => 'dir/goes/here/foo.html.haml',
+        @entry = Entry.new(:path => 'dir/goes/here/foo/bar.html.haml',
                            :section => @section)
-        @section.stubs(:entries).returns [@entry]
         @entry.stubs(:build!).returns @entry
+        @section.stubs(:entries).returns [@entry]
+        @nonsection_subdirectories = ['dir/goes/here/fizzle']
+        @section.stubs(:nonsection_subdirectories).
+                 returns [@nonsection_subdirectories]
+        Kernel.stubs :system
+      end
+      
+      test 'should find subsections' do
+        @section.expects(:subsections).returns [@subsection]
+        @section.build!
+      end
+      
+      test 'should build each subsection' do
+        @subsection.expects(:build!).returns @subsection
+        @section.build!
       end
       
       test 'should find subsections' do
@@ -425,6 +470,17 @@ module SectionTest
       
       test 'should build each entry' do
         @entry.expects(:build!).returns @entry
+        @section.build!
+      end
+      
+      test 'should create the build path' do
+        Kernel.expects(:system).with 'mkdir -p "_output/dir/goes/here"'
+        @section.build!
+      end
+      
+      test 'should copy each nonsection subdirectory to the build path' do
+        Kernel.expects(:system).
+               with 'cp -R "dir/goes/here/fizzle" "_output/dir/goes/here/"'
         @section.build!
       end
       
@@ -484,9 +540,7 @@ module SectionTest
       end
       
       test 'should search for content directories in path' do
-        Dir.expects(:glob).
-            with('dir/goes/here/[^_]*-content').
-            yields 'foo-content'
+        Dir.expects(:glob).with('dir/goes/here/[^_]*').yields 'foo-content'
         @section.subsections
       end
       
