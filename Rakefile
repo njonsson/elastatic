@@ -34,10 +34,12 @@ def in_project_directory
   end
 end
 
-TESTS_FILESPEC = File.expand_path("#{File.dirname __FILE__}/test/**/*_test.rb")
-def with_test_files
+TESTS_FILESPECS = {:all    => 'test/**/*_test.rb',
+                   :unit   => 'test/unit/**/*_test.rb',
+                   :system => 'test/system/**/*_test.rb'}
+def with_test_files(type=:all)
   first = true
-  Dir.glob TESTS_FILESPEC do |f|
+  Dir.glob TESTS_FILESPECS[type] do |f|
     yield f, first
     first = false
   end
@@ -69,7 +71,8 @@ desc 'Run automated tests'
 task :test do
   announce "Running tests ...\n", :done => nil do
     with_test_files do |f, first|
-      require File.join(File.dirname(f), File.basename(f, '.rb'))
+      require File.expand_path(File.join(File.dirname(f),
+                                         File.basename(f, '.rb')))
     end
   end
 end
@@ -105,7 +108,7 @@ namespace :test do
                     :skips      => 0}
       with_test_files do |f, first|
         puts '-' * 67 unless first
-        IO.popen %Q(/usr/bin/env ruby "#{f}") do |stdout|
+        IO.popen %Q(/usr/bin/env ruby "#{File.expand_path f}") do |stdout|
           until stdout.eof? do
             line = stdout.gets.chomp
             puts line
@@ -131,8 +134,49 @@ namespace :test do
     desc 'Create a code coverage report for the tests in test'
     Rcov::RcovTask.new :coverage do |rcov|
       rcov.output_dir = 'test_coverage'
-      rcov.test_files = TESTS_FILESPEC
-      rcov.verbose    = true
+      rcov.test_files = [File.expand_path(TESTS_FILESPECS[:all]),
+                         File.expand_path('lib/**/*.rb')]
+    end
+  end
+  
+  desc 'Run automated unit tests'
+  task :unit do
+    announce "Running unit tests ...\n", :done => nil do
+      with_test_files :unit do |f, first|
+        require File.expand_path(File.join(File.dirname(f),
+                                           File.basename(f, '.rb')))
+      end
+    end
+  end
+  
+  namespace :unit do
+    unless RCOV_MISSING
+      desc 'Create a code coverage report for the tests in test/unit'
+      Rcov::RcovTask.new :coverage do |rcov|
+        rcov.output_dir = 'test_coverage/unit'
+        rcov.test_files = [File.expand_path(TESTS_FILESPECS[:unit]),
+                           File.expand_path('lib/**/*.rb')]
+      end
+    end
+  end
+  
+  desc 'Run automated system tests'
+  task :system do
+    announce "Running system tests ...\n", :done => nil do
+      with_test_files :system do |f, first|
+        require File.join(File.dirname(f), File.basename(f, '.rb'))
+      end
+    end
+  end
+  
+  namespace :system do
+    unless RCOV_MISSING
+      desc 'Create a code coverage report for the tests in test/system'
+      Rcov::RcovTask.new :coverage do |rcov|
+        rcov.output_dir = 'test_coverage/system'
+        rcov.test_files = [File.expand_path(TESTS_FILESPECS[:system]),
+                           File.expand_path('lib/**/*.rb')]
+      end
     end
   end
 end
