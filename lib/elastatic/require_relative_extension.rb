@@ -5,7 +5,7 @@ module RequireRelativeExtension
     relative_path = block_returning_relative_path.call
     path_expression = 'File.expand_path File.join(File.dirname(__FILE__), ' +
                                                  "#{relative_path.inspect})"
-    absolute_path = binding_of_caller.eval(path_expression)
+    absolute_path = binding_of_caller.send(:eval, path_expression)
     Kernel.require absolute_path
   end
   
