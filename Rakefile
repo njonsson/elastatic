@@ -12,7 +12,7 @@ rescue LoadError
   $stderr.puts '*' * 68
 end
 require File.expand_path("#{File.dirname __FILE__}/lib/elastatic/require_relative_extension")
-require_relative { 'lib/site' }
+require_relative 'lib/site'
 
 def announce(message, options={})
   options[:done] = ' done' unless options.include?(:done)

@@ -1,13 +1,13 @@
 require 'test/unit'
 require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
-require_relative { '../../lib/elastatic/friendly_tests_extension' }
+require_relative '../../lib/elastatic/friendly_tests_extension'
 Symbol.class_eval do
   begin
     remove_method :to_proc
   rescue NameError
   end
 end
-require_relative { '../../lib/elastatic/to_proc_extension' }
+require_relative '../../lib/elastatic/to_proc_extension'
 
 class Elastatic::ToProcExtensionTest < Test::Unit::TestCase
   

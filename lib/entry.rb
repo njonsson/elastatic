@@ -1,8 +1,8 @@
 require 'pathname'
 require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
-require_relative { 'elastatic/inflections_extension' }
-require_relative { 'renderers' }
-require_relative { 'site' }
+require_relative 'elastatic/inflections_extension'
+require_relative 'renderers'
+require_relative 'site'
 
 class Entry
   
