@@ -14,7 +14,8 @@ class Renderers::BaseTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       @base_renderer.supported_file_extensions = %w(foo)
     end
-    assert_raise TypeError do
+    assert_raise TypeError,      # < Ruby 1.9
+                 RuntimeError do # = Ruby 1.9
       @base_renderer.supported_file_extensions << 'foo'
     end
   end

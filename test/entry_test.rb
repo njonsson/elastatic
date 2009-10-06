@@ -44,7 +44,8 @@ class EntryTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       @entry.path = 'bar'
     end
-    assert_raise TypeError do
+    assert_raise TypeError,      # < Ruby 1.9
+                 RuntimeError do # = Ruby 1.9
       @entry.path.gsub! 'foo', 'bar'
     end
     assert_raise NoMethodError do

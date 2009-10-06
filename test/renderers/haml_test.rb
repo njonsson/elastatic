@@ -12,7 +12,8 @@ class Renderers::HamlTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       @haml.supported_file_extensions = %w(foo)
     end
-    assert_raise TypeError do
+    assert_raise TypeError,      # < Ruby 1.9
+                 RuntimeError do # = Ruby 1.9
       @haml.supported_file_extensions << 'foo'
     end
   end
