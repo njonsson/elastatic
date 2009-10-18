@@ -12,7 +12,7 @@ class Entry
     unless attributes[:path] && attributes[:section]
       raise ArgumentError, ':path and :section attributes are required'
     end
-    @path    = attributes[:path].freeze
+    @path    = attributes[:path]
     @section = attributes[:section]
   end
   

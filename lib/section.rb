@@ -14,7 +14,7 @@ class Section
   attr_reader :path
   
   def initialize(attributes={})
-    @path = attributes[:path].freeze
+    @path = attributes[:path]
   end
   
   def build!

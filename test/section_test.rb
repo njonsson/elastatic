@@ -5,7 +5,7 @@ require_relative '../lib/elastatic/friendly_tests_extension'
 require_relative '../lib/section'
 require_relative '../lib/entry'
 
-module SectionTest
+class SectionTest < Test::Unit::TestCase
   
   module ClassMethods
     
@@ -21,6 +21,22 @@ module SectionTest
       
     end
     
+  end
+  
+  def setup
+    @section = Section.new(:path => 'foo')
+  end
+  
+  test 'should be immutable' do
+    assert_raise NoMethodError do
+      @section.path = 'bar'
+    end
+=begin
+    assert_raise TypeError,      # < Ruby 1.9
+                 RuntimeError do # = Ruby 1.9
+      @section.path.gsub! 'foo', 'bar'
+    end
+=end
   end
   
   class BuildPath < Test::Unit::TestCase
