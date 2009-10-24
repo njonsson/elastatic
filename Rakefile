@@ -1,5 +1,4 @@
 require 'rake'
-Rake.application.options.trace = true
 require 'rake/rdoctask'
 begin
   require 'rcov/rcovtask'
