@@ -77,12 +77,14 @@ namespace :test do
   desc 'Run each automated test file in its own Ruby process'
   task :individually do
     def accumulate_counts!(output_line, statistics)
-      match_data = output_line.match(/^(\d+) tests, (\d+) assertions, (\d+) failures, (\d+) errors$/)
+      regexp = /^(\d+) tests, (\d+) assertions, (\d+) failures, (\d+) errors(?:, (\d+) skips)?$/
+      match_data = output_line.match(regexp)
       return false unless match_data
       statistics[:tests]      += match_data[1].to_i
       statistics[:assertions] += match_data[2].to_i
       statistics[:failures]   += match_data[3].to_i
       statistics[:errors]     += match_data[4].to_i
+      statistics[:skips]      += match_data[5].to_i
       true
     end
     
@@ -98,7 +100,8 @@ namespace :test do
                     :tests      => 0,
                     :assertions => 0,
                     :failures   => 0,
-                    :errors     => 0}
+                    :errors     => 0,
+                    :skips      => 0}
       with_test_files do |f, first|
         puts '-' * 67 unless first
         IO.popen %Q(/usr/bin/env ruby "#{f}") do |stdout|
@@ -118,7 +121,8 @@ namespace :test do
       puts "#{statistics[:tests]} tests, "           +
            "#{statistics[:assertions]} assertions, " +
            "#{statistics[:failures]} failures, "     +
-           "#{statistics[:errors]} errors"
+           "#{statistics[:errors]} errors, "         +
+           "#{statistics[:skips]} skips"
     end
   end
   
