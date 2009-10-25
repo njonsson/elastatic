@@ -2,11 +2,7 @@ require 'test/unit'
 require File.expand_path("#{File.dirname __FILE__}/../../vendor/mocha")
 require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
 
-class RequireRelativeExtensionTest < Test::Unit::TestCase
-  
-  def test_should_be_evident_as_an_extension_to_Object
-    assert_kind_of RequireRelativeExtension, Object.new
-  end
+class Elastatic::RequireRelativeExtensionTest < Test::Unit::TestCase
   
   def test_should_require_the_expected_path_when_require_relative_is_called_on_Kernel
     Kernel.expects(:require).

@@ -1,4 +1,6 @@
-module RequireRelativeExtension
+module Elastatic; end
+
+module Elastatic::RequireRelativeExtension
   
   def require_relative(relative_path)
     absolute_path = File.expand_path(File.join(File.dirname(caller.first),
@@ -9,5 +11,5 @@ module RequireRelativeExtension
 end
 
 Object.class_eval do
-  include RequireRelativeExtension
+  include Elastatic::RequireRelativeExtension
 end
