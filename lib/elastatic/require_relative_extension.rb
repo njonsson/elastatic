@@ -2,12 +2,9 @@ module Elastatic; end
 
 module Elastatic::RequireRelativeExtension
   
-  def require_relative(&block_returning_relative_path)
-    binding_of_caller = block_returning_relative_path.binding
-    relative_path = block_returning_relative_path.call
-    path_expression = 'File.expand_path File.join(File.dirname(__FILE__), ' +
-                                                 "#{relative_path.inspect})"
-    absolute_path = binding_of_caller.eval(path_expression)
+  def require_relative(relative_path)
+    absolute_path = File.expand_path(File.join(File.dirname(caller.first),
+                                               relative_path))
     Kernel.require absolute_path
   end
   

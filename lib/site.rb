@@ -1,5 +1,5 @@
 require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
-require_relative { 'section' }
+require_relative 'section'
 
 class Site
   
