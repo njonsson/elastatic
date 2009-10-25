@@ -1,4 +1,6 @@
-module RequireRelativeExtension
+module Elastatic; end
+
+module Elastatic::RequireRelativeExtension
   
   def require_relative(&block_returning_relative_path)
     binding_of_caller = block_returning_relative_path.binding
@@ -12,5 +14,5 @@ module RequireRelativeExtension
 end
 
 Object.class_eval do
-  include RequireRelativeExtension
+  include Elastatic::RequireRelativeExtension
 end
