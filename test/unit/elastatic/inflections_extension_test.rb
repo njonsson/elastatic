@@ -1,9 +1,9 @@
 require 'test/unit'
 unless private_methods.include?(:require_relative)
-  require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+  require File.expand_path("#{File.dirname __FILE__}/../../../lib/elastatic/require_relative_extension")
 end
-require_relative '../../lib/elastatic/friendly_tests_extension'
-require_relative '../../lib/elastatic/inflections_extension'
+require_relative '../../../lib/elastatic/friendly_tests_extension'
+require_relative '../../../lib/elastatic/inflections_extension'
 
 module Elastatic::InflectionsExtensionTest
   

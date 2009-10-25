@@ -5,8 +5,8 @@ if private_methods.include?(:require_relative)
   puts '*' * 67
 else
   require 'test/unit'
-  require File.expand_path("#{File.dirname __FILE__}/../../vendor/mocha")
-  require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+  require File.expand_path("#{File.dirname __FILE__}/../../../vendor/mocha")
+  require File.expand_path("#{File.dirname __FILE__}/../../../lib/elastatic/require_relative_extension")
   
   class Elastatic::RequireRelativeExtensionTest < Test::Unit::TestCase
     

@@ -1,10 +1,10 @@
 require 'test/unit'
 unless private_methods.include?(:require_relative)
-  require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+  require File.expand_path("#{File.dirname __FILE__}/../../../lib/elastatic/require_relative_extension")
 end
-require_relative '../../vendor/mocha'
-require_relative '../../lib/elastatic/friendly_tests_extension'
-require_relative '../../lib/renderers/base'
+require_relative '../../../vendor/mocha'
+require_relative '../../../lib/elastatic/friendly_tests_extension'
+require_relative '../../../lib/renderers/base'
 
 class Renderers::BaseTest < Test::Unit::TestCase
   

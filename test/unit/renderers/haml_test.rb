@@ -1,8 +1,8 @@
 unless private_methods.include?(:require_relative)
-  require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
+  require File.expand_path("#{File.dirname __FILE__}/../../../lib/elastatic/require_relative_extension")
 end
-require_relative '../../lib/elastatic/friendly_tests_extension'
-require_relative '../../lib/renderers/haml'
+require_relative '../../../lib/elastatic/friendly_tests_extension'
+require_relative '../../../lib/renderers/haml'
 
 class Renderers::HamlTest < Test::Unit::TestCase
   
