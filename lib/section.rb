@@ -2,6 +2,7 @@ require 'yaml'
 unless private_methods.include?(:require_relative)
   require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
 end
+require_relative 'elastatic/immutability_extension'
 require_relative 'elastatic/inflections_extension'
 unless :a_symbol.respond_to?(:to_proc)
   require_relative 'elastatic/to_proc_extension'
@@ -14,6 +15,7 @@ class Section
   CONFIG_FILENAME = '_config.yml' unless const_defined?('CONFIG_FILENAME')
   
   attr_reader :path
+  immutable :path
   
   def initialize(attributes={})
     @path = attributes[:path].freeze

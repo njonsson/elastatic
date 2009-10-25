@@ -2,6 +2,7 @@ require 'pathname'
 unless private_methods.include?(:require_relative)
   require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
 end
+require_relative 'elastatic/immutability_extension'
 require_relative 'elastatic/inflections_extension'
 require_relative 'renderers'
 require_relative 'site'
@@ -9,6 +10,7 @@ require_relative 'site'
 class Entry
   
   attr_reader :path, :section
+  immutable :path
   
   def initialize(attributes={})
     unless attributes[:path] && attributes[:section]
