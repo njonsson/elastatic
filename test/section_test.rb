@@ -455,7 +455,7 @@ class SectionTest < Test::Unit::TestCase
         @section.stubs(:entries).returns [@entry]
         @nonsection_subdirectories = ['dir/goes/here/fizzle']
         @section.stubs(:nonsection_subdirectories).
-                 returns [@nonsection_subdirectories]
+                 returns @nonsection_subdirectories
         Kernel.stubs :system
       end
       
