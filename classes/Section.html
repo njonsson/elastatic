@@ -156,10 +156,10 @@
             onclick="toggleCode('M000001-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000001-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 18</span>
-18:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span>={})
-19:     <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:path</span>]
-20:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 20</span>
+20:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">attributes</span>={})
+21:     <span class="ruby-ivar">@path</span> = <span class="ruby-identifier">attributes</span>[<span class="ruby-identifier">:path</span>]
+22:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -181,13 +181,13 @@
             onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000002-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 22</span>
-22:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build!</span>
-23:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
-24:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
-25:     <span class="ruby-identifier">publish_nonsection_subdirectories!</span>
-26:     <span class="ruby-keyword kw">self</span>
-27:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 24</span>
+24:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build!</span>
+25:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
+26:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
+27:     <span class="ruby-identifier">publish_nonsection_subdirectories!</span>
+28:     <span class="ruby-keyword kw">self</span>
+29:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -207,12 +207,12 @@
             onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000003-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 29</span>
-29:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_path</span>
-30:     <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Site</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTPUT_DIRECTORY</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">path</span>
-31:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-constant">Site</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTPUT_DIRECTORY</span>,
-32:               <span class="ruby-identifier">path</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/-content([\/\\]+)/</span>, <span class="ruby-value str">'\1'</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/-content$/</span>, <span class="ruby-value str">''</span>)
-33:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 31</span>
+31:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build_path</span>
+32:     <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Site</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTPUT_DIRECTORY</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">path</span>
+33:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span> <span class="ruby-constant">Site</span><span class="ruby-operator">::</span><span class="ruby-constant">OUTPUT_DIRECTORY</span>,
+34:               <span class="ruby-identifier">path</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/-content([\/\\]+)/</span>, <span class="ruby-value str">'\1'</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/-content$/</span>, <span class="ruby-value str">''</span>)
+35:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -232,11 +232,11 @@
             onclick="toggleCode('M000004-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000004-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 35</span>
-35:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">empty?</span>
-36:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">empty?</span>
-37:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">all?</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:empty?</span>
-38:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 37</span>
+37:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">empty?</span>
+38:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">empty?</span>
+39:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">all?</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:empty?</span>
+40:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -256,12 +256,12 @@
             onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000005-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 40</span>
-40:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">entries</span>
-41:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:entries</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
-42:       <span class="ruby-constant">Entry</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">f</span>, <span class="ruby-identifier">:section</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>
-43:     <span class="ruby-keyword kw">end</span>
-44:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 42</span>
+42:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">entries</span>
+43:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:entries</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+44:       <span class="ruby-constant">Entry</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">f</span>, <span class="ruby-identifier">:section</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>
+45:     <span class="ruby-keyword kw">end</span>
+46:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -281,10 +281,10 @@
             onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000006-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 46</span>
-46:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
-47:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">detect</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:index?</span>
-48:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 48</span>
+48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
+49:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">detect</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:index?</span>
+50:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -304,10 +304,10 @@
             onclick="toggleCode('M000008-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000008-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 56</span>
-56:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">nonsection_subdirectories</span>
-57:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:other</span>
-58:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 58</span>
+58:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">nonsection_subdirectories</span>
+59:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:other</span>
+60:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -327,12 +327,12 @@
             onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000007-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 50</span>
-50:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subsections</span>
-51:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:sections</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
-52:       <span class="ruby-constant">Section</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">d</span>
-53:     <span class="ruby-keyword kw">end</span>
-54:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 52</span>
+52:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">subsections</span>
+53:     <span class="ruby-identifier">collect_from_filesystem</span> <span class="ruby-identifier">:sections</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span>
+54:       <span class="ruby-constant">Section</span>.<span class="ruby-identifier">new</span> <span class="ruby-identifier">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">d</span>
+55:     <span class="ruby-keyword kw">end</span>
+56:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -352,12 +352,12 @@
             onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000009-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/section.rb, line 60</span>
-60:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
-61:     <span class="ruby-identifier">title_from_config_file</span> = <span class="ruby-identifier">fetch_title_from_config_file</span>
-62:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">title_from_config_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">title_from_config_file</span>
-63:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span> <span class="ruby-value">? </span><span class="ruby-identifier">build_path</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'.'</span>)).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
-64:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/section.rb, line 62</span>
+62:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">title</span>
+63:     <span class="ruby-identifier">title_from_config_file</span> = <span class="ruby-identifier">fetch_title_from_config_file</span>
+64:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">title_from_config_file</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">title_from_config_file</span>
+65:     <span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-identifier">path</span> <span class="ruby-value">? </span><span class="ruby-identifier">build_path</span> <span class="ruby-operator">:</span> <span class="ruby-value str">'.'</span>)).<span class="ruby-identifier">humanize</span>.<span class="ruby-identifier">titleize</span>
+66:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

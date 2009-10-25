@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Module: Elastatic::RequireRelativeExtension</title>
+  <title>Module: Elastatic::ImmutabilityExtension</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
   <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
@@ -50,13 +50,13 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Module</strong></td>
-          <td class="class-name-in-header">Elastatic::RequireRelativeExtension</td>
+          <td class="class-name-in-header">Elastatic::ImmutabilityExtension</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../../files/lib/elastatic/require_relative_extension_rb.html">
-                lib/elastatic/require_relative_extension.rb
+                <a href="../../files/lib/elastatic/immutability_extension_rb.html">
+                lib/elastatic/immutability_extension.rb
                 </a>
         <br />
             </td>
@@ -80,7 +80,7 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000030">require_relative</a>&nbsp;&nbsp;
+      <a href="#M000027">included</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -91,6 +91,12 @@
 
     <div id="section">
 
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="ImmutabilityExtension/ClassMethods.html" class="link">Elastatic::ImmutabilityExtension::ClassMethods</a><br />
+
+    </div>
 
 
 
@@ -100,28 +106,26 @@
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Instance methods</h3>
+      <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000030" class="method-detail">
-        <a name="M000030"></a>
+      <div id="method-M000027" class="method-detail">
+        <a name="M000027"></a>
 
         <div class="method-heading">
-          <a href="#M000030" class="method-signature">
-          <span class="method-name">require_relative</span><span class="method-args">(relative_path)</span>
+          <a href="#M000027" class="method-signature">
+          <span class="method-name">included</span><span class="method-args">(other_module)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000030-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000030-source">
+            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000027-source">
 <pre>
-   <span class="ruby-comment cmt"># File lib/elastatic/require_relative_extension.rb, line 5</span>
-5:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">require_relative</span>(<span class="ruby-identifier">relative_path</span>)
-6:     <span class="ruby-identifier">absolute_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">caller</span>.<span class="ruby-identifier">first</span>),
-7:                                                <span class="ruby-identifier">relative_path</span>))
-8:     <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">require</span> <span class="ruby-identifier">absolute_path</span>
-9:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/elastatic/immutability_extension.rb, line 18</span>
+18:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">other_module</span>)
+19:     <span class="ruby-identifier">other_module</span>.<span class="ruby-identifier">extend</span> <span class="ruby-constant">ClassMethods</span>
+20:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
