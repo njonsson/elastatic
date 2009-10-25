@@ -3,13 +3,9 @@ unless private_methods.include?(:require_relative)
   require File.expand_path("#{File.dirname __FILE__}/../../lib/elastatic/require_relative_extension")
 end
 require_relative '../../lib/elastatic/friendly_tests_extension'
-Symbol.class_eval do
-  begin
-    remove_method :to_proc
-  rescue NameError
-  end
+unless :a_symbol.respond_to?(:to_proc)
+  require_relative '../../lib/elastatic/to_proc_extension'
 end
-require_relative '../../lib/elastatic/to_proc_extension'
 
 class Elastatic::ToProcExtensionTest < Test::Unit::TestCase
   

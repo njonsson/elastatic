@@ -3,7 +3,7 @@ unless private_methods.include?(:require_relative)
   require File.expand_path("#{File.dirname __FILE__}/elastatic/require_relative_extension")
 end
 require_relative 'elastatic/inflections_extension'
-unless Symbol.respond_to?(:to_proc)
+unless :a_symbol.respond_to?(:to_proc)
   require_relative 'elastatic/to_proc_extension'
 end
 require_relative 'entry'
