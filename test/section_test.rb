@@ -1,6 +1,9 @@
 require 'test/unit'
-require File.expand_path("#{File.dirname __FILE__}/../lib/elastatic/require_relative_extension")
+unless private_methods.include?(:require_relative)
+  require File.expand_path("#{File.dirname __FILE__}/../lib/elastatic/require_relative_extension")
+end
 require_relative '../vendor/mocha'
+require_relative '../lib/elastatic/assertions_extension'
 require_relative '../lib/elastatic/friendly_tests_extension'
 require_relative '../lib/section'
 require_relative '../lib/entry'
@@ -31,12 +34,9 @@ class SectionTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       @section.path = 'bar'
     end
-=begin
-    assert_raise TypeError,      # < Ruby 1.9
-                 RuntimeError do # = Ruby 1.9
+    assert_unchanged '@section.path' do
       @section.path.gsub! 'foo', 'bar'
     end
-=end
   end
   
   class BuildPath < Test::Unit::TestCase

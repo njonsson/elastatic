@@ -10,7 +10,9 @@ rescue LoadError
   $stderr.puts "To install RCov, type 'gem install rcov'."
   $stderr.puts '*' * 68
 end
-require File.expand_path("#{File.dirname __FILE__}/lib/elastatic/require_relative_extension")
+unless private_methods.include?(:require_relative)
+  require File.expand_path("#{File.dirname __FILE__}/lib/elastatic/require_relative_extension")
+end
 require_relative 'lib/site'
 
 def announce(message, options={})

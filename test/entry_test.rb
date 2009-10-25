@@ -1,6 +1,9 @@
 require 'test/unit'
-require File.expand_path("#{File.dirname __FILE__}/../lib/elastatic/require_relative_extension")
+unless private_methods.include?(:require_relative)
+  require File.expand_path("#{File.dirname __FILE__}/../lib/elastatic/require_relative_extension")
+end
 require_relative '../vendor/mocha'
+require_relative '../lib/elastatic/assertions_extension'
 require_relative '../lib/elastatic/friendly_tests_extension'
 require_relative '../lib/entry'
 require_relative '../lib/renderers'
@@ -44,12 +47,9 @@ class EntryTest < Test::Unit::TestCase
     assert_raise NoMethodError do
       @entry.path = 'bar'
     end
-=begin
-    assert_raise TypeError,      # < Ruby 1.9
-                 RuntimeError do # = Ruby 1.9
+    assert_unchanged '@entry.path' do
       @entry.path.gsub! 'foo', 'bar'
     end
-=end
     assert_raise NoMethodError do
       @entry.section = Section.new
     end
@@ -135,7 +135,9 @@ class EntryTest < Test::Unit::TestCase
       
       def setup
         super
-        @entry.stubs(:path).returns 'dir/goes/here/foo.html.haml'.freeze
+        def @entry.path
+          'dir/goes/here/foo.html.haml'
+        end
       end
       
       test 'should choose a renderer for each of the file extensions when sent build!' do
