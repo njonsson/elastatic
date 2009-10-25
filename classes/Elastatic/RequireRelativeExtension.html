@@ -5,10 +5,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Module: RequireRelativeExtension</title>
+  <title>Module: Elastatic::RequireRelativeExtension</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <meta http-equiv="Content-Script-Type" content="text/javascript" />
-  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
   <script type="text/javascript">
   // <![CDATA[
 
@@ -50,12 +50,12 @@
         <table class="header-table">
         <tr class="top-aligned-row">
           <td><strong>Module</strong></td>
-          <td class="class-name-in-header">RequireRelativeExtension</td>
+          <td class="class-name-in-header">Elastatic::RequireRelativeExtension</td>
         </tr>
         <tr class="top-aligned-row">
             <td><strong>In:</strong></td>
             <td>
-                <a href="../files/lib/elastatic/require_relative_extension_rb.html">
+                <a href="../../files/lib/elastatic/require_relative_extension_rb.html">
                 lib/elastatic/require_relative_extension.rb
                 </a>
         <br />
@@ -80,7 +80,7 @@
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000027">require_relative</a>&nbsp;&nbsp;
+      <a href="#M000028">require_relative</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -102,29 +102,26 @@
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000027" class="method-detail">
-        <a name="M000027"></a>
+      <div id="method-M000028" class="method-detail">
+        <a name="M000028"></a>
 
         <div class="method-heading">
-          <a href="#M000027" class="method-signature">
-          <span class="method-name">require_relative</span><span class="method-args">(&amp;block_returning_relative_path)</span>
+          <a href="#M000028" class="method-signature">
+          <span class="method-name">require_relative</span><span class="method-args">(relative_path)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000027-source">
+            onclick="toggleCode('M000028-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000028-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/elastatic/require_relative_extension.rb, line 3</span>
- 3:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">require_relative</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block_returning_relative_path</span>)
- 4:     <span class="ruby-identifier">binding_of_caller</span> = <span class="ruby-identifier">block_returning_relative_path</span>.<span class="ruby-identifier">binding</span>
- 5:     <span class="ruby-identifier">relative_path</span> = <span class="ruby-identifier">block_returning_relative_path</span>.<span class="ruby-identifier">call</span>
- 6:     <span class="ruby-identifier">path_expression</span> = <span class="ruby-value str">'File.expand_path File.join(File.dirname(__FILE__), '</span> <span class="ruby-operator">+</span>
- 7:                                                  <span class="ruby-node">&quot;#{relative_path.inspect})&quot;</span>
- 8:     <span class="ruby-identifier">absolute_path</span> = <span class="ruby-identifier">binding_of_caller</span>.<span class="ruby-identifier">eval</span>(<span class="ruby-identifier">path_expression</span>)
- 9:     <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">require</span> <span class="ruby-identifier">absolute_path</span>
-10:   <span class="ruby-keyword kw">end</span>
+   <span class="ruby-comment cmt"># File lib/elastatic/require_relative_extension.rb, line 5</span>
+5:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">require_relative</span>(<span class="ruby-identifier">relative_path</span>)
+6:     <span class="ruby-identifier">absolute_path</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">caller</span>.<span class="ruby-identifier">first</span>),
+7:                                                <span class="ruby-identifier">relative_path</span>))
+8:     <span class="ruby-constant">Kernel</span>.<span class="ruby-identifier">require</span> <span class="ruby-identifier">absolute_path</span>
+9:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
