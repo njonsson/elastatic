@@ -217,8 +217,8 @@
 <pre>
     <span class="ruby-comment cmt"># File lib/section.rb, line 24</span>
 24:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">build!</span>
-25:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
-26:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>
+25:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>)
+26:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">:build!</span>)
 27:     <span class="ruby-identifier">publish_nonsection_subdirectories!</span>
 28:     <span class="ruby-keyword kw">self</span>
 29:   <span class="ruby-keyword kw">end</span>
@@ -283,7 +283,7 @@
     <span class="ruby-comment cmt"># File lib/section.rb, line 37</span>
 37:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">empty?</span>
 38:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">empty?</span>
-39:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">all?</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:empty?</span>
+39:     <span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">all?</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">:empty?</span>)
 40:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -345,7 +345,7 @@
 <pre>
     <span class="ruby-comment cmt"># File lib/section.rb, line 48</span>
 48:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
-49:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">detect</span> <span class="ruby-operator">&amp;</span><span class="ruby-identifier">:index?</span>
+49:     <span class="ruby-identifier">entries</span>.<span class="ruby-identifier">detect</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">:index?</span>)
 50:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>

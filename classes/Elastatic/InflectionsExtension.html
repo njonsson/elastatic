@@ -128,7 +128,7 @@
 <pre>
    <span class="ruby-comment cmt"># File lib/elastatic/inflections_extension.rb, line 5</span>
 5:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">camelize</span>
-6:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-regexp re">/(^\w|_+\w)/</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">initial</span><span class="ruby-operator">|</span>
+6:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/(^\w|_+\w)/</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">initial</span><span class="ruby-operator">|</span>
 7:       <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-value str">'_'</span>, <span class="ruby-value str">''</span>).<span class="ruby-identifier">upcase</span>
 8:     <span class="ruby-keyword kw">end</span>
 9:   <span class="ruby-keyword kw">end</span>
@@ -160,8 +160,8 @@
 <pre>
     <span class="ruby-comment cmt"># File lib/elastatic/inflections_extension.rb, line 11</span>
 11:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">humanize</span>
-12:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-regexp re">/[a-z0-9][_\-][a-z0-9]/i</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word_juncture</span><span class="ruby-operator">|</span>
-13:       <span class="ruby-identifier">word_juncture</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-regexp re">/[_\-]/</span>, <span class="ruby-value str">' '</span>
+12:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/[a-z0-9][_\-][a-z0-9]/i</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">word_juncture</span><span class="ruby-operator">|</span>
+13:       <span class="ruby-identifier">word_juncture</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/[_\-]/</span>, <span class="ruby-value str">' '</span>)
 14:     <span class="ruby-keyword kw">end</span>
 15:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -192,7 +192,7 @@
 <pre>
     <span class="ruby-comment cmt"># File lib/elastatic/inflections_extension.rb, line 17</span>
 17:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">titleize</span>
-18:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span> <span class="ruby-regexp re">/\b[a-z]/</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">initial</span><span class="ruby-operator">|</span>
+18:     <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/\b[a-z]/</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">initial</span><span class="ruby-operator">|</span>
 19:       <span class="ruby-identifier">initial</span>.<span class="ruby-identifier">upcase</span>
 20:     <span class="ruby-keyword kw">end</span>
 21:   <span class="ruby-keyword kw">end</span>
