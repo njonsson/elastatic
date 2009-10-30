@@ -195,6 +195,7 @@ class SectionTest < Test::Unit::TestCase
     
     def setup
       @section = Section.new
+      @entry = Entry.new(:path => 'foo/bar.html.haml', :section => @section)
     end
     
     test 'should have nil path' do
@@ -211,7 +212,6 @@ class SectionTest < Test::Unit::TestCase
         super
         @subsection = Section.new(:path => 'foo')
         @section.stubs(:subsections).returns [@subsection]
-        @entry = Entry.new(:path => 'foo/bar.html.haml', :section => @section)
         @entry.stubs(:build!).returns @entry
         @section.stubs(:entries).returns [@entry]
         Kernel.stubs :system
@@ -325,14 +325,14 @@ class SectionTest < Test::Unit::TestCase
       def setup
         super
         @filesystem_entries = %w(foo-content bar baz.html.haml)
-        Dir.stubs(:glob).multiple_yields *@filesystem_entries
+        Dir.stubs(:glob).multiple_yields(*@filesystem_entries)
         File.stubs(:directory?).with(@filesystem_entries[0]).returns true
         File.stubs(:directory?).with(@filesystem_entries[1]).returns true
         File.stubs(:directory?).with(@filesystem_entries[2]).returns false
       end
       
       test 'should search for subdirectories in root' do
-        Dir.expects(:glob).multiple_yields *@filesystem_entries
+        Dir.expects(:glob).multiple_yields(*@filesystem_entries)
         @section.nonsection_subdirectories
       end
       
@@ -433,6 +433,7 @@ class SectionTest < Test::Unit::TestCase
     
     def setup
       @section = Section.new(:path => 'dir/goes/here')
+      @subsection = Section.new(:path => 'dir/goes/here/foo')
     end
     
     test 'should have expected path' do
@@ -447,7 +448,6 @@ class SectionTest < Test::Unit::TestCase
       
       def setup
         super
-        @subsection = Section.new(:path => 'dir/goes/here/foo')
         @section.stubs(:subsections).returns [@subsection]
         @entry = Entry.new(:path => 'dir/goes/here/foo/bar.html.haml',
                            :section => @section)
