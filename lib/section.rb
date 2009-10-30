@@ -22,8 +22,8 @@ class Section
   end
   
   def build!
-    entries.each &:build!
-    subsections.each &:build!
+    entries.each(&:build!)
+    subsections.each(&:build!)
     publish_nonsection_subdirectories!
     self
   end
@@ -36,7 +36,7 @@ class Section
   
   def empty?
     return false unless entries.empty?
-    subsections.all? &:empty?
+    subsections.all?(&:empty?)
   end
   
   def entries
@@ -46,7 +46,7 @@ class Section
   end
   
   def index
-    entries.detect &:index?
+    entries.detect(&:index?)
   end
   
   def subsections
