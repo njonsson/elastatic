@@ -108,7 +108,7 @@ namespace :test do
                     :skips      => 0}
       with_test_files do |f, first|
         puts '-' * 67 unless first
-        IO.popen %Q(/usr/bin/env ruby "#{File.expand_path f}") do |stdout|
+        IO.popen %Q(/usr/bin/env ruby -w "#{File.expand_path f}") do |stdout|
           until stdout.eof? do
             line = stdout.gets.chomp
             puts line
