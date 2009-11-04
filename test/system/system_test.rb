@@ -17,7 +17,7 @@ class SystemTest < Test::Unit::TestCase
     test  = %Q("#{@here_path}/test_project/_output")
     truth = %Q("#{@here_path}/truth")
     assert_equal true,
-                 system("diff --recursive #{test} #{truth}"),
+                 system("diff --unified --recursive #{test} #{truth}"),
                  "'diff' found differences between #{test} and #{truth}"
   end
   
