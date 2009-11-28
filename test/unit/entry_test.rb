@@ -163,7 +163,7 @@ class EntryTest < Test::Unit::TestCase
       end
       
       test 'should write the rendered content to the output subdirectory when sent build!' do
-        @mock_file.expects(:print).with "&lt;content&gt;goes here&lt;/content&gt;\n"
+        @mock_file.expects(:print).with "<content>goes here</content>\n"
         @entry.build!
       end
       
