@@ -15,7 +15,10 @@ class Renderers::Haml
     
     def render(haml_source, options={})
       options = {:attr_wrapper => '"'}.merge(options)
-      Haml::Engine.new(haml_source, options).render options[:scope]
+      Haml::Engine.new(haml_source, options).render(options[:scope]).
+                                             gsub('&', '&amp;').
+                                             gsub('<', '&lt;').
+                                             gsub '>', '&gt;'
     end
     
     def supported_file_extensions

@@ -30,15 +30,15 @@ class Renderers::HamlTest < Test::Unit::TestCase
   
   test 'should render Haml to the expected HTML' do
     expected_html = <<-end_expected_html
-<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>Foo</title>
-  </head>
-  <body>
-    <h1>Foo</h1>
-    <p>Foo bar baz.</p>
-  </body>
-</html>
+&lt;html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml"&gt;
+  &lt;head&gt;
+    &lt;title&gt;Foo&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Foo&lt;/h1&gt;
+    &lt;p&gt;Foo bar baz.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
     end_expected_html
     haml = <<-end_haml
 %html{html_attrs}
@@ -54,11 +54,11 @@ class Renderers::HamlTest < Test::Unit::TestCase
   
   test 'should render Haml using the scope option' do
     expected_html = <<-end_expected_html
-<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
-  <body>
-    <h1>this is a test</h1>
-  </body>
-</html>
+&lt;html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml"&gt;
+  &lt;body&gt;
+    &lt;h1&gt;this is a test&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
     end_expected_html
     haml = <<-end_haml
 %html{html_attrs}
