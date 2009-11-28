@@ -4,6 +4,3 @@
 [submodule "vendor/mocha"]
 	path = vendor/mocha
 	url = git://github.com/floehopper/mocha.git
-[submodule "vendor/redcloth"]
-	path = vendor/redcloth
-	url = git://github.com/jgarber/redcloth.git
